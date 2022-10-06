@@ -13,7 +13,7 @@ csv_schema = {
             {
                 "syntax_error":False,
                 "format_error": {
-                    "boolOt" : False
+                    "boolOt": False,
                     "cose da corregeg" : ""
                 }
             }
