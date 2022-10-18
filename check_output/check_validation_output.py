@@ -18,12 +18,11 @@ def check_validation_output(validation_output_instance):
     if type(validation_output_instance) == list:
         # schema = load(open('error_report_schema.json', 'r'))
         schema = load(open(join(dirname(__file__), 'error_report_schema.json'), 'r'))
-        # the line above allows to access json file from any working directory
+        # the line above allows to access the json file from any working directory
     elif type(validation_output_instance) == dict:
         # schema = load(open('single_validation_output_schema.json', 'r'))
         schema = load(open(join(dirname(__file__), 'single_validation_output_schema.json'), 'r'))
-        # the line above allows to access json file from any working directory
-
+        # the line above allows to access the json file from any working directory
     else:
         raise TypeError("The function's argument must be either a dictionary or a list!")
 
