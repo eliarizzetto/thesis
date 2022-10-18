@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "http://example.com/example.json",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "validation_level": {
+        "type": "string",
+        "enum": [
+          "csv_wellformedness",
+          "external_syntax",
+          "semantic"
+        ]
+      },
+      "error_type": {
+        "type": "string",
+        "enum": [
+          "error",
+          "warning"
+        ]
+      },
+      "message": {
+        "type": "string"
+      },
+      "valid" : {"type": "boolean"},
+      "position": {
+        "type": "object",
+        "properties": {
+          "row": {
+            "type": "integer"
+          },
+          "field": {
+            "type": "string",
+            "enum": ["id", "title", "author", "pub_date", "venue", "volume", "issue", "page", "type", "publisher", "editor", "citing_id", "citing_publication_date", "cited_id", "cited_publication_date"]
+          },
+          "idx_in_field": {
+            "type": "integer"
+          }
+        },
+        "dependentRequired": {
+          "field": [
+            "row"
+          ],
+          "idx_in_field": [
+            "field"
+          ]
+        },
+        "additionalProperties": false
+      }
+    },
+    "required": ["validation_level", "error_type", "message", "position"],
+    "if": {
+      "properties": {
+        "error_type": {
+          "const": "error"
+        }
+      }
+    },
+    "then": {
+      "properties": {
+        "valid": {
+          "const": false
+        }
+      }
+    },
+    "additionalProperties": false
+  },
+  "uniqueItems": false
+}
