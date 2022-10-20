@@ -12,7 +12,7 @@ def validate():
     input_data = DictReader(input_csv)
 
     for row_idx, row in enumerate(input_data):
-
+        print(row)
         for field, field_value in row.items():
             if content(field_value): # check if the field is empty
                 if field == "id":
@@ -51,9 +51,9 @@ def content(field_str: str):
     Check whether the string contains usable data.
     :param field_str: String corresponding to the value for any field key
     (e.g. the string value for the field "id").
-    :return: False if the string doesn't contain only spaces or is empty, True otherwise
+    :return: False if the string contains only spaces or is empty, True otherwise
     """
-    if match(r'^\s*$', field_str) or field_str.lower() == "none" or field_str.lower() == "nan":
+    if match(r'^\s*$', field_str) or field_str.lower() == "none" or field_str.lower() == "nan" or field_str.lower() == 'null' or field_str == '':
         return False
     else:
         return True

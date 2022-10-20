@@ -28,3 +28,4 @@ with open("test_files/test_session002.csv", "x", encoding="utf-8") as f:
     for l in temp_list:
         for row in l:
             writer.writerow(row)
+            print(row)
