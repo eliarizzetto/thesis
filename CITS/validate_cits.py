@@ -4,7 +4,7 @@ from helper_functions import content
 from validation_functions import wellformedness_id_field, wellformedness_single_id, wellformedness_date
 from create_report import create_error_dict
 from check_output.check_validation_output import check_validation_output
-
+from pprint import pprint
 
 # sample_row = {
 #     'citing_id': 'doi:10/10894u4i3 wikidata:Q5163238 issn:73874',
@@ -21,7 +21,7 @@ sample_invalid_row = {
 
 error_final_report = []
 
-for field, value in row.items():
+for field, value in sample_invalid_row.items():
     if content(value):
 
         if field == 'citing_id' or field == 'cited_id':
@@ -61,3 +61,4 @@ for field, value in row.items():
                                           message=message, row=0, field=field))
 
 
+pprint(error_final_report)
