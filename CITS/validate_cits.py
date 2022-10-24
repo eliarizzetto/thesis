@@ -38,7 +38,7 @@ for field, value in sample_invalid_row.items():
             for id_idx, id in enumerate(value.split()):
 
                 if not wellformedness_single_id(id):
-                    message = "The value in this field is not expressed in compliance with the syntax of OpenCitation " \
+                    message = "The value in this field is not expressed in compliance with the syntax of OpenCitations " \
                               "CITS-CSV. Each identifier in 'citing_id' and/or 'cited_id' must have the following " \
                               "form: ID abbreviation + “:” + ID value. No spaces are admitted within the ID. Example: " \
                               "doi:10.48550/arXiv.2206.03971. The accepted prefixes (ID abbreviations) are the " \
@@ -51,7 +51,7 @@ for field, value in sample_invalid_row.items():
 
         if field == 'citing_publication_date' or field == 'cited_publication_date':
             if not wellformedness_date(value):
-                message = "The value in this field is not expressed in compliance with the syntax of OpenCitation " \
+                message = "The value in this field is not expressed in compliance with the syntax of OpenCitations " \
                           "CITS-CSV. The content of 'citing_publication_date' and/or 'cited_publication_date' must be " \
                           "of one of the following forms (according to standard ISO 86014): YYYY-MM-DD, YYYY-MM, " \
                           "YYYY. If year is required, month and day are optional. If the day is expressed, " \
