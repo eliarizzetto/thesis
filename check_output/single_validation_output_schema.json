@@ -25,45 +25,54 @@
       "type": "boolean"
     },
     "position": {
-      "type": "object",
-      "properties": {
-        "row": {
-          "type": "integer"
+        "type":"object",
+        "properties":{
+          "located_in":{
+            "type":"string",
+            "enum":[
+              "row",
+              "field",
+              "item"
+            ]
+          },
+          "row":{
+            "type":"array",
+            "items":{
+              "type":"integer"
+            }
+          },
+          "field":{
+            "anyOf":[
+              {
+                "type":"array",
+                "items":{
+                  "type": "string",
+                  "enum":["id", "title", "author", "pub_date", "venue", "volume", "issue", "page", "type", "publisher", "editor", "citing_id", "citing_publication_date", "cited_id", "cited_publication_date"]
+                }
+              },
+              {"type": "null"}
+            ]
+          },
+          "item":{
+            "anyOf":[
+              {
+                "type":"array",
+                "items":{
+                  "type": "integer"
+                }
+              },
+              {"type": "null"}
+            ]
+          }
         },
-        "field": {
-          "type": "string",
-          "enum": [
-            "id",
-            "title",
-            "author",
-            "pub_date",
-            "venue",
-            "volume",
-            "issue",
-            "page",
-            "type",
-            "publisher",
-            "editor",
-            "citing_id",
-            "citing_publication_date",
-            "cited_id",
-            "cited_publication_date"
-          ]
-        },
-        "idx_in_field": {
-          "type": "integer"
-        }
-      },
-      "dependentRequired": {
-        "field": [
-          "row"
+        "required":[
+          "located_in",
+          "row",
+          "field",
+          "item"
         ],
-        "idx_in_field": [
-          "field"
-        ]
-      },
-      "additionalProperties": false
-    }
+        "additionalProperties":false
+      }
   },
   "required": [
     "validation_level",

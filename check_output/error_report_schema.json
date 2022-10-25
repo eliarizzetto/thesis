@@ -25,28 +25,53 @@
       },
       "valid" : {"type": "boolean"},
       "position": {
-        "type": "object",
-        "properties": {
-          "row": {
-            "type": "integer"
+        "type":"object",
+        "properties":{
+          "located_in":{
+            "type":"string",
+            "enum":[
+              "row",
+              "field",
+              "item"
+            ]
           },
-          "field": {
-            "type": "string",
-            "enum": ["id", "title", "author", "pub_date", "venue", "volume", "issue", "page", "type", "publisher", "editor", "citing_id", "citing_publication_date", "cited_id", "cited_publication_date"]
+          "row":{
+            "type":"array",
+            "items":{
+              "type":"integer"
+            }
           },
-          "idx_in_field": {
-            "type": "integer"
+          "field":{
+            "anyOf":[
+              {
+                "type":"array",
+                "items":{
+                  "type": "string",
+                  "enum":["id", "title", "author", "pub_date", "venue", "volume", "issue", "page", "type", "publisher", "editor", "citing_id", "citing_publication_date", "cited_id", "cited_publication_date"]
+                }
+              },
+              {"type": "null"}
+            ]
+          },
+          "item":{
+            "anyOf":[
+              {
+                "type":"array",
+                "items":{
+                  "type": "integer"
+                }
+              },
+              {"type": "null"}
+            ]
           }
         },
-        "dependentRequired": {
-          "field": [
-            "row"
-          ],
-          "idx_in_field": [
-            "field"
-          ]
-        },
-        "additionalProperties": false
+        "required":[
+          "located_in",
+          "row",
+          "field",
+          "item"
+        ],
+        "additionalProperties":false
       }
     },
     "required": ["validation_level", "error_type", "message", "position"],
