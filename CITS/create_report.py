@@ -2,21 +2,22 @@
 # about an error (i.e. create a single error report).
 
 
-def create_error_dict(validation_level: str, error_type: str, message: str, located_in: str, row: list, field=None, item=None):
+def create_error_dict(validation_level: str, error_type: str, message: str, located_in: str, table: dict, valid=False):
     """
-    Creates a dictionary with the information about an error
-    :param validation_level: str, one of the following values: 'csv_wellformedness', 'external_syntax', 'semantic'
-    :param error_type: str, one of the following values: 'error', 'warning'
-    :param message: str, the message explaining the error to display to the user
-    :param located_in: str, the type of the area where the error is located, i.e. ONE among the following: "row", "field", "item".
-    :param row: list of one or more integers, i.e. the indexes of the rows in which the error is located
-    :param field: either None or a list of strings among the following values: "id", "title", "author", "pub_date", "venue", "volume", "issue",
-    "page", "type", "publisher", "editor", "citing_id", "citing_publication_date", "cited_id", "cited_publication_date".
-    Must be specified whenever the error is inside a specific field.
-    :param item: either None or a list of integers, i.e. the indexes of a field's items where the errors are located.
-    :return: dict with the error's details
+    Creates a dictionary representing the error, i.e. the negative output of a validation function
+    :param validation_level: one of the following values: "csv_wellformedness", "external_syntax", "semantic".
+    :param error_type: one of the following values: "error", "warning".
+    :param message: the message for the user
+    :param located_in: the type of the table's area that is made invalid by the error; one of the following values: "row, "field", "item"
+    :param table: the tree representing the exact location of all the elements that make the error
+    :param valid = flag for specifying whether the data raising the error is still valid or not. Defaults to False, meaning that the error makes the whole document invalid.
+    :return: the details of a specific error, as it is detected by executing a validation function
     """
-    position = {'located_in': located_in, 'row': row, 'field': field, 'item': item}
+
+    position = {
+        'located_in': located_in,
+        'table': table
+    }
 
     result = {
         'validation_level': validation_level,
