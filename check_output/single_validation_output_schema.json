@@ -1,98 +1,119 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "http://example.com/single_output_dictionary_schema.json",
-  "type": "object",
-  "properties": {
-    "validation_level": {
-      "type": "string",
-      "enum": [
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"http://example.com/single_output_dictionary_schema.json",
+  "type":"object",
+  "properties":{
+    "validation_level":{
+      "type":"string",
+      "enum":[
         "csv_wellformedness",
         "external_syntax",
         "semantic"
       ]
     },
-    "error_type": {
-      "type": "string",
-      "enum": [
+    "error_type":{
+      "type":"string",
+      "enum":[
         "error",
         "warning"
       ]
     },
-    "message": {
-      "type": "string"
+    "message":{
+      "type":"string"
     },
-    "valid": {
-      "type": "boolean"
+    "valid":{
+      "type":"boolean"
     },
-    "position": {
-        "type":"object",
-        "properties":{
-          "located_in":{
-            "type":"string",
-            "enum":[
-              "row",
-              "field",
-              "item"
-            ]
-          },
-          "row":{
-            "type":"array",
-            "items":{
-              "type":"integer"
+    "position":{
+      "type":"object",
+      "properties":{
+        "located_in":{
+          "type":"string",
+          "enum":[
+            "row",
+            "field",
+            "item"
+          ]
+        },
+        "table":{
+          "type":"object",
+          "properties":{
+            "row":{
+              "type":"array",
+              "items":{
+                "type":"integer"
+              }
+            },
+            "field":{
+              "anyOf":[
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string",
+                    "enum":[
+                      "id",
+                      "title",
+                      "author",
+                      "pub_date",
+                      "venue",
+                      "volume",
+                      "issue",
+                      "page",
+                      "type",
+                      "publisher",
+                      "editor",
+                      "citing_id",
+                      "citing_publication_date",
+                      "cited_id",
+                      "cited_publication_date"
+                    ]
+                  }
+                },
+                {
+                  "type":"null"
+                }
+              ]
+            },
+            "item":{
+              "type":"array",
+              "items":{
+                "type":"integer"
+              }
             }
           },
-          "field":{
-            "anyOf":[
-              {
-                "type":"array",
-                "items":{
-                  "type": "string",
-                  "enum":["id", "title", "author", "pub_date", "venue", "volume", "issue", "page", "type", "publisher", "editor", "citing_id", "citing_publication_date", "cited_id", "cited_publication_date"]
-                }
-              },
-              {"type": "null"}
-            ]
-          },
-          "item":{
-            "anyOf":[
-              {
-                "type":"array",
-                "items":{
-                  "type": "integer"
-                }
-              },
-              {"type": "null"}
-            ]
-          }
-        },
-        "required":[
-          "located_in",
-          "row",
-          "field",
-          "item"
-        ],
-        "additionalProperties":false
-      }
+          "required":[
+            "row",
+            "field",
+            "item"
+          ]
+        }
+      },
+      "required":[
+        "located_in",
+        "table"
+      ],
+      "additionalProperties":false
+    }
   },
-  "required": [
+  "required":[
     "validation_level",
     "error_type",
     "message",
     "position"
   ],
-  "if": {
-    "properties": {
-      "error_type": {
-        "const": "error"
+  "if":{
+    "properties":{
+      "error_type":{
+        "const":"error"
       }
     }
   },
-  "then": {
-    "properties": {
-      "valid": {
-        "const": false
+  "then":{
+    "properties":{
+      "valid":{
+        "const":false
       }
     }
   },
-  "additionalProperties": false
+  "additionalProperties":false
 }
