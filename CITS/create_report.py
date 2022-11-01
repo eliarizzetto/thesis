@@ -8,7 +8,7 @@ def create_error_dict(validation_level: str, error_type: str, message: str, loca
     :param validation_level: one of the following values: "csv_wellformedness", "external_syntax", "semantic".
     :param error_type: one of the following values: "error", "warning".
     :param message: the message for the user
-    :param located_in: the type of the table's area that is made invalid by the error; one of the following values: "row, "field", "item"
+    :param located_in: the type of the table's area where the error is located; one of the following values: "row, "field", "item"
     :param table: the tree representing the exact location of all the elements that make the error
     :param valid = flag for specifying whether the data raising the error is still valid or not. Defaults to False, meaning that the error makes the whole document invalid.
     :return: the details of a specific error, as it is detected by executing a validation function
