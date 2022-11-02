@@ -15,6 +15,9 @@
                   <Item>
                     <option name="path" value="check_output/position_tmp.json" />
                   </Item>
+                  <Item>
+                    <option name="path" value="validation_process/prove/prova_table_schema.json" />
+                  </Item>
                 </list>
               </option>
             </SchemaInfo>
