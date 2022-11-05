@@ -19,13 +19,16 @@ with open(csv_doc, 'r', encoding='utf-8') as f:
 
     messages = yaml.full_load(open('messages.yaml', 'r', encoding='utf-8'))
 
-    set_unique_items = set() # ----------------!!!
+    id_fields_instances = []
+    #set_unique_items = set() # ----------------!!!
 
     for row_idx, row in enumerate(data_dict):
+
 
         for field, value in row.items():
             if content(value):
                 if field == 'citing_id' or field == 'cited_id':
+                    ids_set = set()  # set where to put valid IDs only
                     items = re.split('\s', value)
 
                     for item_idx, item in enumerate(items):
@@ -46,11 +49,12 @@ with open(csv_doc, 'r', encoding='utf-8') as f:
 
                         else:
                             # -------------ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
-                            pass
 
-                            set_unique_items.add(item)
+                            ids_set.add(item)
+                            #set_unique_items.add(item)
 
-
+                    if len(ids_set) >= 1:
+                        id_fields_instances.append(ids_set)
 
                 if field == 'citing_publication_date' or field == 'cited_publication_date':
                     if not wellformedness_date(value):
@@ -60,25 +64,26 @@ with open(csv_doc, 'r', encoding='utf-8') as f:
                             create_error_dict(validation_level='csv_wellformedness', error_type='error',
                                               message=message, located_in='item', table=table))
 
-    position_dict = dict()
 
-    for u_it in set_unique_items:
-        position_dict_unique_id = dict()
-        for row_idx, row in enumerate(data_dict):
-
-            if field == 'citing_id' or field == 'cited_id':
-                items = re.split('\s', value)
-
-                for item_idx, item in enumerate(items):
-                    if u_it == item:
-                        position_dict_unique_id[row_idx][field] = [item_idx]
-
-        if len(position_dict_unique_id) > 1:
-            position_dict["duplication_error" + u_it] = dict()
-            for k, v in position_dict_unique_id.items():
-                position_dict["duplication_error" + u_it][k] = {"id": v}
-
-    print(position_dict)
+# position_dict = dict()
+#
+# for u_it in set_unique_items:
+#     position_dict_unique_id = dict()
+#     for row_idx, row in enumerate(data_dict):
+#
+#         if field == 'citing_id' or field == 'cited_id':
+#             items = re.split('\s', value)
+#
+#             for item_idx, item in enumerate(items):
+#                 if u_it == item:
+#                     position_dict_unique_id[row_idx][field] = [item_idx]
+#
+#     if len(position_dict_unique_id) > 1:
+#         position_dict["duplication_error" + u_it] = dict()
+#         for k, v in position_dict_unique_id.items():
+#             position_dict["duplication_error" + u_it][k] = {"id": v}
+#
+# print(position_dict)
 
 pprint(error_final_report, sort_dicts=False)
 # print(error_final_report)

@@ -8,19 +8,8 @@ import re
 from pprint import pprint
 import yaml
 from csv import DictReader
+from helper_functions import group_ids
 
-# sample_row = {
-#     'citing_id': 'doi:10/10894u4i3 wikidata:Q5163238 issn:73874',
-#     'citing_publication_date': '2020-04-17',
-#     'cited_id': 'isbn:7388748744',
-#     'cited_publication_date': '2018-02-14'
-# }
-# sample_invalid_row = {
-#     'citing_id': 'ciao:10/10894u4i3 wikidata:Q5163238   issn:73874 topogigio',
-#     'citing_publication_date': '2020-17',
-#     'cited_id': 'isbn:7388748744',
-#     'cited_publication_date': '2018/02/14'
-# }
 
 csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/sample_cits.csv'
 
