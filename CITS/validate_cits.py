@@ -20,7 +20,6 @@ with open(csv_doc, 'r', encoding='utf-8') as f:
     messages = yaml.full_load(open('messages.yaml', 'r', encoding='utf-8'))
 
     id_fields_instances = []
-    # set_unique_items = set() # ----------------!!!
 
     for row_idx, row in enumerate(data_dict):
         for field, value in row.items():
