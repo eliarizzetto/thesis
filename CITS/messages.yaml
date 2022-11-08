@@ -18,6 +18,15 @@ m3: >
   forms (according to standard ISO 86014): YYYY-MM-DD, YYYY-MM, YYYY. If year is required, month and day 
   are optional. If the day is expressed, the day must also be expressed. Examples: '2000'; '2000-04'; '2000-04-27'.
 
+m4: >
+  SCRIVI UN MESSAGGIO PER LE SELF-CITATION!
+
+m5: >
+  SCRIVI UN MESSAGGIO PER LE DUPLICATE ROWS!
+
+m6: >
+  SCRIVI UN MESSAGGIO PER I CASI IN CUI LO STESSO ID è PRESENTE DUE VOLTE ALL'INTERNO DI UNO STESSO FIELD PER LA STESSA
+  RIGA!
 
 
 
