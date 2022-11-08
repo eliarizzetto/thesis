@@ -20,6 +20,9 @@
           "warning"
         ]
       },
+      "error_label": {
+        "type": "string"
+      },
       "message": {
         "type": "string"
       },
@@ -91,6 +94,7 @@
     "required": [
       "validation_level",
       "error_type",
+      "error_label",
       "message",
       "position"
     ],
@@ -109,6 +113,6 @@
       }
     },
     "additionalProperties": false
-  },
+},
   "uniqueItems": false
 }
