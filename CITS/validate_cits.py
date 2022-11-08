@@ -74,9 +74,9 @@ with open(csv_doc, 'r', encoding='utf-8') as f:
     entities = group_ids(id_fields_instances)
 
     # GET SELF-CITATIONS AND DUPLICATE CITATIONS
-    duplicate_report = get_duplicates_cits(entities=entities, data_dict=data_dict)
+    duplicate_report = get_duplicates_cits(entities=entities, data_dict=data_dict, messages=messages)
 
     if duplicate_report:
-        error_final_report.append(duplicate_report)
+        error_final_report.extend(duplicate_report)
 
 pprint(error_final_report)

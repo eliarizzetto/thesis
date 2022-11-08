@@ -1,14 +1,16 @@
 from helper_functions import group_ids
 from create_report import create_error_dict
-from validate_cits import messages
+# from validate_cits import messages
 import re
 
-def get_duplicates_cits(entities: list, data_dict: list) -> list:
+
+def get_duplicates_cits(entities: list, data_dict: list, messages) -> list:
     """
     Creates a list of dictionaries containing the duplication error in the whole document, either within a row
     (self-citation) or between two or more rows (duplicate citations).
     :param entities: list containing sets of strings (the IDs), where each set corresponds to a bibliographic entity
     :param data_dict: the list of the document's rows, read as dictionaries
+    :param messages: the dictionary containing the messages as they're read from the .yaml config file
     :return: list of dictionaries, each carrying full info about each duplication error within the document.
     """
     visited_dicts = []
@@ -72,10 +74,3 @@ def get_duplicates_cits(entities: list, data_dict: list) -> list:
                                   message=message, located_in='row', table=table))
 
     return report
-
-
-
-
-
-
-
