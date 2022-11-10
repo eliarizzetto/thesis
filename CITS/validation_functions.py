@@ -17,8 +17,8 @@ def wellformedness_id_field(id_field):
 
 def wellformedness_single_id(id_element):
     """
-    Validates the well-formedness of a single element inside the 'citing_id', 'cited_id' or 'id' field of a row, checking its
-    compliance with CITS-csv/META-CSV syntax.
+    Validates the well-formedness of a single element inside the 'citing_id', 'cited_id' or 'id' field of a row,
+    checking its compliance with CITS-csv/META-CSV syntax.
     :param id_element: str
     :return: bool
     """

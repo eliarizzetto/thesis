@@ -1,64 +1,111 @@
 # This file contains the base structure wherein to call the validation functions for CITS-CSV.
 
-from helper_functions import content
+from helper_functions import content, group_ids, check_fieldnames_cits
 from validation_functions import wellformedness_id_field, wellformedness_single_id, wellformedness_date
 from create_report import create_error_dict
-from check_output.check_validation_output import check_validation_output
+# from check_output.check_validation_output import check_validation_output
+import re
 from pprint import pprint
+import yaml
+from csv import DictReader
+from get_duplicates import get_duplicates_cits
 
-# sample_row = {
-#     'citing_id': 'doi:10/10894u4i3 wikidata:Q5163238 issn:73874',
-#     'citing_publication_date': '2020-04-17',
-#     'cited_id': 'isbn:7388748744',
-#     'cited_publication_date': '2018-02-14'
-# }
-sample_invalid_row = {
-    'citing_id': 'ciao:10/10894u4i3 wikidata:Q5163238   issn:73874',
-    'citing_publication_date': '2020-17',
-    'cited_id': 'isbn:7388748744',
-    'cited_publication_date': '2018/02/14'
-}
-
-error_final_report = []
-
-for field, value in sample_invalid_row.items():
-    if content(value):
-
-        if field == 'citing_id' or field == 'cited_id':
-            if not wellformedness_id_field(value):
-                message = "The value in this field is not expressed in compliance with the syntax of OpenCitation " \
-                          "CITS-CSV. The content of 'citing_id' and 'cited_id' must be either a single ID or a sequence" \
-                          " of IDs, each separated by one single space character (Unicode Character “SPACE”, U+0020). " \
-                          "Each ID must not have spaces within itself, and must be of the following form: " \
-                          "ID abbreviation + “:” + ID value. "
-
-                error_final_report.append(create_error_dict(validation_level='csv_wellformedness', error_type='error', message=message,
-                                          row=0, field=field))
-
-            for id_idx, id in enumerate(value.split()):
-
-                if not wellformedness_single_id(id):
-                    message = "The value in this field is not expressed in compliance with the syntax of OpenCitations " \
-                              "CITS-CSV. Each identifier in 'citing_id' and/or 'cited_id' must have the following " \
-                              "form: ID abbreviation + “:” + ID value. No spaces are admitted within the ID. Example: " \
-                              "doi:10.48550/arXiv.2206.03971. The accepted prefixes (ID abbreviations) are the " \
-                              "following: 'doi', 'issn', 'isbn', 'pmid', 'pmcid', 'url', 'wikidata', 'wikipedia'. "
-
-                    error_final_report.append(create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                              message=message, row=0, field=field, idx_in_field=id_idx))
-
-                    # -------------ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
-
-        if field == 'citing_publication_date' or field == 'cited_publication_date':
-            if not wellformedness_date(value):
-                message = "The value in this field is not expressed in compliance with the syntax of OpenCitations " \
-                          "CITS-CSV. The content of 'citing_publication_date' and/or 'cited_publication_date' must be " \
-                          "of one of the following forms (according to standard ISO 86014): YYYY-MM-DD, YYYY-MM, " \
-                          "YYYY. If year is required, month and day are optional. If the day is expressed, " \
-                          "the day must also be expressed. Examples: '2000'; '2000-04'; '2000-04-27'."
-
-                error_final_report.append(create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                          message=message, row=0, field=field))
+csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/sample_cits.csv'
 
 
-pprint(error_final_report)
+def validate_cits(csv_doc: str) -> list:
+    """
+    Validates CITS-CSV.
+    :param csv_doc
+    :return: the list of error, i.e. the report of the validation process
+    """
+    with open(csv_doc, 'r', encoding='utf-8') as f:
+        data_dict = list(DictReader(f))
+
+        # TODO: Handling strategy for the error here below, which doesn't allow further processing!
+        if not check_fieldnames_cits(data_dict):  # check fieldnames
+            raise KeyError
+
+        error_final_report = []
+
+        messages = yaml.full_load(open('messages.yaml', 'r', encoding='utf-8'))
+
+        id_fields_instances = []
+
+        for row_idx, row in enumerate(data_dict):
+            for field, value in row.items():
+                if field == 'citing_id' or field == 'cited_id':
+                    if not content(value):  # Check required fields
+                        message = messages['m7']
+                        table = {row_idx: {field: None}}
+                        error_final_report.append(
+                            create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                              message=message, error_label='required_value_cits', located_in='field',
+                                              table=table))
+
+                    ids_set = set()  # set where to put valid IDs only
+                    items = re.split('\s', value)
+
+                    for item_idx, item in enumerate(items):
+
+                        if item == '':
+                            message = messages['m1']
+                            table = {row_idx: {field: [item_idx]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='extra_space', located_in='item',
+                                                  table=table))
+
+                        elif not wellformedness_single_id(item):
+                            message = messages['m2']
+                            table = {row_idx: {field: [item_idx]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='id_format', located_in='item',
+                                                  table=table))
+
+                        else:
+                            # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
+
+                            if item not in ids_set:
+                                ids_set.add(item)
+                            else:  # in-field duplication of the same ID
+                                table = {row: {field: [i for i, v in enumerate(item) if v == item]}}
+                                message = messages['m6']
+
+                                error_final_report.append(
+                                    create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                      message=message, error_label='duplicate_id', located_in='item',
+                                                      table=table)  # valid=False
+                                )
+
+                    if len(ids_set) >= 1:
+                        id_fields_instances.append(ids_set)
+
+                if field == 'citing_publication_date' or field == 'cited_publication_date':
+                    # todo: consider splitting into items also some one-item fields, like the ones for the date,
+                    #  in order to identify the error location more precisely (for example, in case of extra spaces)
+                    if content(value):
+                        if not wellformedness_date(value):
+                            message = messages['m3']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='date_format', located_in='item',
+                                                  table=table))
+
+        # GET BIBLIOGRAPHIC ENTITIES
+        entities = group_ids(id_fields_instances)
+
+        # GET SELF-CITATIONS AND DUPLICATE CITATIONS (returns the list of error reports)
+        duplicate_report = get_duplicates_cits(entities=entities, data_dict=data_dict, messages=messages)
+
+        if duplicate_report:
+            error_final_report.extend(duplicate_report)
+
+
+        print(data_dict[5])
+        return error_final_report
+
+
+pprint(validate_cits(csv_doc))

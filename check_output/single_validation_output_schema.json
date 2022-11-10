@@ -18,6 +18,9 @@
         "warning"
       ]
     },
+    "error_label": {
+      "type": "string"
+    },
     "message": {
       "type": "string"
     },
@@ -27,47 +30,69 @@
     "position": {
       "type": "object",
       "properties": {
-        "row": {
-          "type": "integer"
-        },
-        "field": {
+        "located_in": {
           "type": "string",
           "enum": [
-            "id",
-            "title",
-            "author",
-            "pub_date",
-            "venue",
-            "volume",
-            "issue",
-            "page",
-            "type",
-            "publisher",
-            "editor",
-            "citing_id",
-            "citing_publication_date",
-            "cited_id",
-            "cited_publication_date"
+            "row",
+            "field",
+            "item"
           ]
         },
-        "idx_in_field": {
-          "type": "integer"
+        "table": {
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": {
+              "type": "object",
+              "additionalProperties": {
+                "propertyNames": {
+                  "enum": [
+                    "id",
+                    "title",
+                    "author",
+                    "pub_date",
+                    "venue",
+                    "volume",
+                    "issue",
+                    "page",
+                    "type",
+                    "publisher",
+                    "editor",
+                    "citing_id",
+                    "citing_publication_date",
+                    "cited_id",
+                    "cited_publication_date"
+                  ]
+                },
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minProperties": 1
+            }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
         }
       },
-      "dependentRequired": {
-        "field": [
-          "row"
-        ],
-        "idx_in_field": [
-          "field"
-        ]
-      },
+      "required": [
+        "located_in",
+        "table"
+      ],
       "additionalProperties": false
     }
   },
   "required": [
     "validation_level",
     "error_type",
+    "error_label",
     "message",
     "position"
   ],

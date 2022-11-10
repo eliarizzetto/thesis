@@ -1,0 +1,34 @@
+# This file contains the messages explaining an error to the user.
+
+m1: >
+  The value in this field is not expressed in compliance with the syntax of OpenCitations CITS-CSV.
+  The content of 'citing_id' and 'cited_id' must be either a single ID or a sequence of IDs, each separated
+  by one single space character (Unicode Character “SPACE”, U+0020). Each ID must not have spaces within 
+  itself, and must be of the following form: <ID abbreviation> + “:” + <ID value>.
+
+m2: >
+  The value in this field is not expressed in compliance with the syntax of OpenCitations CITS-CSV. 
+  Each identifier in 'citing_id' and/or 'cited_id' must have the following form: ID abbreviation + “:” + ID value.
+  No spaces are admitted within the ID. Example: doi:10.48550/arXiv.2206.03971. The accepted prefixes 
+  (ID abbreviations) are the following: 'doi', 'issn', 'isbn', 'pmid', 'pmcid', 'url', 'wikidata', 'wikipedia'.
+
+m3: >
+  The value in this field is not expressed in compliance with the syntax of OpenCitations CITS-CSV. 
+  The content of 'citing_publication_date' and/or 'cited_publication_date' must be of one of the following 
+  forms (according to standard ISO 86014): YYYY-MM-DD, YYYY-MM, YYYY. If year is required, month and day 
+  are optional. If the day is expressed, the day must also be expressed. Examples: '2000'; '2000-04'; '2000-04-27'.
+
+m4: >
+  SCRIVI UN MESSAGGIO PER LE SELF-CITATION!
+
+m5: >
+  SCRIVI UN MESSAGGIO PER LE DUPLICATE ROWS!
+
+m6: >
+  SCRIVI UN MESSAGGIO PER I CASI IN CUI LO STESSO ID è PRESENTE DUE VOLTE ALL'INTERNO DI UNO STESSO FIELD PER LA STESSA
+  RIGA!
+
+m7: >
+  SCRIVI MESSAGGIO PER I CASI IN CUI MANCA O IL FIELD CITING_ID O IL FIELD CITED_ID, CHE SONO OBBLIGATORI IN CITS-CSV
+
+
