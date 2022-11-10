@@ -2,17 +2,15 @@
 
 from re import match
 
-def content(field_str: str):
+def content(value):
     """
-    Check whether the string contains usable data.
-    :param field_str: String corresponding to the value for any field key
+    Checks whether the value of a given field contains data, i.e. is not an empty string.
+    :param value: the value for any field key
     (e.g. the string value for the field "id").
-    :return: False if the string contains only spaces or is empty, True otherwise
+    :return: False if the value is an empty string, True otherwise
     """
-    if match(r'^\s*$', field_str) or field_str.lower() == "none" or field_str.lower() == "nan" or field_str.lower() == 'null' or field_str == '':
-        return False
-    else:
-        return True
+    # does not consider None values, given that csv.DictReader automatically converts them into empty strings
+    return False if value == '' else True
 
 
 def group_ids(id_groups: list):
@@ -36,3 +34,10 @@ def group_ids(id_groups: list):
 
     return id_groups
 
+def check_fieldnames_cits(data:list):
+    """
+    Checks whether all the fieldnames are present, correct, and in the right order in all the rows of the .csv documents.
+    :param data: the list of dictionaries, each representing a row
+    :return: bool
+    """
+    return all(list(row.keys()) == ['citing_id', 'citing_publication_date', 'cited_id', 'cited_publication_date'] for row in data)

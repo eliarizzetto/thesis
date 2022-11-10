@@ -37,8 +37,9 @@ def get_duplicates_cits(entities: list, data_dict: list, messages) -> list:
             }
             message = messages['m4']
             report.append(
-                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                  message=message, located_in='field', table=table))
+                create_error_dict(validation_level='csv_wellformedness', error_type='warning',
+                                  message=message, error_label='self-citation', located_in='field',
+                                  table=table, valid=True))
 
         # SAVE CITATIONS BETWEEN ENTITIES IN A LIST. 
         # Each citation is represented as a nested dictionary in which the key-values representing the entity-to-entity 
@@ -71,6 +72,6 @@ def get_duplicates_cits(entities: list, data_dict: list, messages) -> list:
 
             report.append(
                 create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                  message=message, located_in='row', table=table))
+                                  message=message, error_label='duplicate_citation', located_in='row', table=table))
 
     return report

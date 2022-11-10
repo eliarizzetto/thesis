@@ -24,6 +24,7 @@ def create_error_dict(validation_level: str, error_type: str, message: str, erro
         'validation_level': validation_level,
         'error_type': error_type,
         'error_label': error_label,
+        'valid': valid, # todo: consider removing 'valid' if for all warnings 'valid'=True and for all errors 'valid'=False
         'message': message,
         'position': position
     }
