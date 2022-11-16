@@ -1,5 +1,5 @@
 ﻿Error;Description;table;Corresponding validation function;validation_level;error_type;error_label;field;valid;located_in;message;Report example;notes
-in-field duplicate ID;an ID is repeated more than once inside a single cell;both;main;csv_wellformedness;error;duplicate_id;citing_id', 'cited_id' or 'id';false;item;;;
+in-field duplicate ID;an ID is repeated more than once inside a single cell;both;main;csv_wellformedness;error;duplicate_id;'citing_id', 'cited_id' or 'id';false;item;;;
 self-citation;the same bibliographic entity is found in both citing_id and cited_id of the same row;cits-csv;get_duplicates_cits;csv_wellformedness;warning;self-citation;citing_id' and 'cited_id';true;field;;;
 duplicate_citation;the same citation (= the fact that a bibliographic entity cites another bibliograhic entity) is found in more than one row;cits-csv;get_duplicates_cits;csv_wellformedness;error;duplicate_citation;citing_id', 'cited_id' or 'id';false;row;;;
 extra spaces in id field;inside the id field, spaces are found at the beginning of the string or at the end, or extra spaces are found between two single ids;both;main;csv_wellformedness;error;extra_space;citing_id', 'cited_id' or 'id';false;item;;;
