@@ -2,6 +2,7 @@
 
 from re import match
 
+
 def content(value):
     """
     Checks whether the value of a given field contains data, i.e. is not an empty string.
@@ -26,7 +27,7 @@ def group_ids(id_groups: list):
     while len(id_groups) < old_len:
         old_len = len(id_groups)
         for i in range(len(id_groups)):
-            for j in range(i+1, len(id_groups)):
+            for j in range(i + 1, len(id_groups)):
                 if len(id_groups[i] & id_groups[j]):
                     id_groups[i] = id_groups[i] | id_groups[j]
                     id_groups[j] = set()
@@ -34,10 +35,25 @@ def group_ids(id_groups: list):
 
     return id_groups
 
-def check_fieldnames_cits(data:list):
+
+def check_fieldnames_cits(data: list):
     """
-    Checks whether all the fieldnames are present, correct, and in the right order in all the rows of the .csv documents.
+    Checks whether all the fieldnames are present, correct, and in the right order in all the rows of the .csv document
+    for CITS-CSV.
     :param data: the list of dictionaries, each representing a row
     :return: bool
     """
-    return all(list(row.keys()) == ['citing_id', 'citing_publication_date', 'cited_id', 'cited_publication_date'] for row in data)
+    return all(
+        list(row.keys()) == ['citing_id', 'citing_publication_date', 'cited_id', 'cited_publication_date'] for row in
+        data)
+
+
+def check_fieldnames_meta(data: list):
+    """
+    Checks whether all the fieldnames are present, correct, and in the right order in all the rows of the .csv document
+    for META-CSV.
+    :param data: the list of dictionaries, each representing a row
+    :return: bool
+    """
+    return all(list(row.keys()) == ["id", "title", "author", "pub_date", "venue", "volume", "issue", "page", "type",
+                                    "publisher", "editor"] for row in data)

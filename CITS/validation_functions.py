@@ -15,7 +15,7 @@ def wellformedness_id_field(id_field):
     else:
         return False
 
-def wellformedness_single_id(id_element):
+def wellformedness_br_id(id_element):
     """
     Validates the well-formedness of a single element inside the 'citing_id', 'cited_id' or 'id' field of a row,
     checking its compliance with CITS-csv/META-CSV syntax.
@@ -28,6 +28,18 @@ def wellformedness_single_id(id_element):
     else:
         return False
 
+def wellformedness_ra_id(id_element):
+    """
+    Validates the well-formedness of a single ID element inside the 'author', 'publisher' or 'editor' field of a row,
+    checking its compliance with META-CSV syntax.
+    :param id_element: str
+    :return: bool
+    """
+    id_pattern = r'^(crossref|orcid|viaf|wikidata|ror|wikipedia):\S+$' # todo: consider removing wikipedia from accepted r.a. IDs
+    if match(id_pattern, id_element):
+        return True
+    else:
+        return False
 
 def wellformedness_date(date_field):
     """
