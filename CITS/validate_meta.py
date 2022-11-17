@@ -10,7 +10,7 @@ import yaml
 from csv import DictReader
 from get_duplicates import get_duplicates_cits
 
-csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/sample_cits.csv'
+csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/test_0.csv'
 
 
 def validate_meta(csv_doc: str) -> list:
@@ -34,6 +34,12 @@ def validate_meta(csv_doc: str) -> list:
         ra_id_groups = []
 
         for row_idx, row in enumerate(data_dict):
+
+            # TODO: CONSIDER INITIALIZING A DICTIONARY FOR LATER CHECKING REQUIRED FIELDS IN ROW. A proper value for
+            #  each visited field of the row would be added here, and later the conditional requirements would be
+            #  checked, right before the closure of the loop for this row. The default behaviour in visiting single
+            #  fields would be: if not content -> add proper value in the dict
+
             for field, value in row.items():
                 if field == 'id':
 
@@ -63,7 +69,7 @@ def validate_meta(csv_doc: str) -> list:
                             table = {row_idx: {field: [item_idx]}}
                             error_final_report.append(
                                 create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='id_format', located_in='item',
+                                                  message=message, error_label='br_id_format', located_in='item',
                                                   table=table))
 
                         else:
@@ -84,6 +90,19 @@ def validate_meta(csv_doc: str) -> list:
                     if len(br_ids_set) >= 1:
                         br_id_groups.append(br_ids_set)
 
+                if field == 'title':
+                    if value.isupper():
+                        message = messages['m8']
+                        table = {row_idx: {field: [0]}}
+                        error_final_report.append(
+                            create_error_dict(validation_level='csv_wellformedness', error_type='warning',
+                                              message=message, error_label='uppercase_title', located_in='item',
+                                              table=table, valid=True))
+
+                if field == 'author':
+                    pass # TODO: find strategy to divide all RA fields into items!
+
+
                 if field == 'pub_date':
                     # todo: consider splitting into items also some one-item fields, like the ones for the date,
                     #  in order to identify the error location more precisely (for example, in case of extra spaces)
@@ -102,12 +121,12 @@ def validate_meta(csv_doc: str) -> list:
 
         # TODO: find duplicates for META-CSV and change this part!!
         # GET SELF-CITATIONS AND DUPLICATE CITATIONS (returns the list of error reports)
-        duplicate_report = get_duplicates_cits(entities=entities, data_dict=data_dict, messages=messages)
-
-        if duplicate_report:
-            error_final_report.extend(duplicate_report)
+        # duplicate_report = get_duplicates_cits(entities=br_entities, data_dict=data_dict, messages=messages)
+        #
+        # if duplicate_report:
+        #     error_final_report.extend(duplicate_report)
 
         return error_final_report
 
 
-pprint(validate_cits(csv_doc))
+pprint(validate_meta(csv_doc))

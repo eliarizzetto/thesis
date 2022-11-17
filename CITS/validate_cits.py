@@ -61,7 +61,7 @@ def validate_cits(csv_doc: str) -> list:
                             table = {row_idx: {field: [item_idx]}}
                             error_final_report.append(
                                 create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='id_format', located_in='item',
+                                                  message=message, error_label='br_id_format', located_in='item',
                                                   table=table))
 
                         else:
