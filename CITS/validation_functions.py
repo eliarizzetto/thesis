@@ -28,18 +28,37 @@ def wellformedness_br_id(id_element):
     else:
         return False
 
-def wellformedness_ra_id(id_element):
+def wellformedness_ra_item(ra_item:str):
     """
-    Validates the well-formedness of a single ID element inside the 'author', 'publisher' or 'editor' field of a row,
+    Validates the well-formedness of an item inside the 'author', 'publisher' or 'editor' field of a row,
     checking its compliance with META-CSV syntax.
-    :param id_element: str
+    :param ra_item: str
     :return: bool
     """
-    id_pattern = r'^(crossref|orcid|viaf|wikidata|ror|wikipedia):\S+$' # todo: consider removing wikipedia from accepted r.a. IDs
-    if match(id_pattern, id_element):
+    outside_brackets = r'(?:[^\s,;\[\]]+(?:\s[^\s,;\[\]]+)*),?(?:\s[^\s,;\[\]]+)*'
+    inside_brackets = r'\[(crossref|orcid|viaf|wikidata|ror):\S+(?:\s(crossref|orcid|viaf|wikidata|ror):\S+)*\]'
+    ra_item_pattern = f'^(?:({outside_brackets}\\s{inside_brackets})|({outside_brackets})|({inside_brackets}))$'
+
+    if match(ra_item_pattern, ra_item):
         return True
     else:
         return False
+
+def orphan_ra_id(ra_item:str):
+    """
+    Looks for possible ID of responsible agents ('author', 'publisher' or 'editor') that are NOT enclosed in
+    brackets, as they should be. Returns True if the input string il likely to be a R.A. ID or a sequence of R.A. IDs
+    separated by a single space. :param ra_item: the item inside a R.A. field, as it is split by the '; ' separator.
+    :return: bool, True if a match is found (the string is likely NOT well-formed), False if NO match is found (the
+    string is more likely to be well-formed).
+    """
+    ra_id_outside_brackets_pattern = r'^\s*(?:(crossref|orcid|viaf|wikidata|ror):\S+\s*)+$'
+
+    if match(ra_id_outside_brackets_pattern, ra_item):
+        return True
+    else:
+        return False
+
 
 def wellformedness_date(date_field):
     """

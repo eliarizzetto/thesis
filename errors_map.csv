@@ -7,4 +7,7 @@
 "missing required value (empty string)","the value of a mandatory field (either citing_id or cited_id) is an empty string","cits-csv","main -> content","csv_wellformedness","error","required_value_cits","citing_id or cited_id","false","field","","",""
 "date","the date is badly formatted (does not match the one regex that defines any correct possibility)","both","wellformedness_date","csv_wellformedness","error","date_format","citing_publication_date, cited_publication_date or pub_date","false","item","","",""
 "uppercase title","the characters of the title string are all uppercase","meta-csv","main -> if value.isupper()","csv_wellformedness","warning","uppercase_title","title","true","item","","",""
+"ra item format","any format error in 'author', 'editor' or 'field'","meta-csv","wellformedness_ra_item","csv_wellformedness","error","ra_item_format","'author', 'editor' or 'field'","false","item","","","'publisher' field might be separated from 'author' and 'editor'"
+"ra id outside brackets","a string likely to be a R.A. ID or a sequence of such is found NOT enclosed in brackets","meta-csv","orphan_ra_id","csv_wellformedness","warning","orphan_ra_ids","'author', 'editor' or 'field'","true","item","","",""
+"","","","","","","","","","","","",""
 "","","","","","","","","","","","",""

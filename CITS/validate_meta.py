@@ -1,7 +1,7 @@
 # This file contains the base structure wherein to call the validation functions for META-CSV.
 
 from helper_functions import content, group_ids, check_fieldnames_meta
-from validation_functions import wellformedness_id_field, wellformedness_br_id, wellformedness_date
+from validation_functions import *
 from create_report import create_error_dict
 # from check_output.check_validation_output import check_validation_output
 import re
@@ -40,16 +40,11 @@ def validate_meta(csv_doc: str) -> list:
             #  checked, right before the closure of the loop for this row. The default behaviour in visiting single
             #  fields would be: if not content -> add proper value in the dict
 
+            # TODO: remember to add 'if content' condition also before checking fields (taking into consideration the
+            #  strategy for required fields...), otherwise you'll get an error for every missing value!
+
             for field, value in row.items():
                 if field == 'id':
-
-                    # if not content(value):  # Check required fields
-                    #     message = messages['m7']
-                    #     table = {row_idx: {field: None}}
-                    #     error_final_report.append(
-                    #         create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                    #                           message=message, error_label='required_value_cits', located_in='field',
-                    #                           table=table))
 
                     br_ids_set = set()  # set where to put valid br IDs only
                     items = re.split(r'\s', value)
@@ -99,9 +94,24 @@ def validate_meta(csv_doc: str) -> list:
                                               message=message, error_label='uppercase_title', located_in='item',
                                               table=table, valid=True))
 
-                if field == 'author':
-                    pass # TODO: find strategy to divide all RA fields into items!
+                if field == 'author' or field == 'editor':
+                    items = re.split(r';\s', value)
 
+                    for item_idx, item in enumerate(items):
+                        if not wellformedness_ra_item(item):
+                            message = messages['m9']
+                            table = {row_idx: {field: [item_idx]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='ra_item_format', located_in='item',
+                                                  table=table))
+                        if orphan_ra_id(item):
+                            message = messages['m10']
+                            table = {row_idx: {field: [item_idx]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='orphan_ra_ids', located_in='item',
+                                                  table=table))
 
                 if field == 'pub_date':
                     # todo: consider splitting into items also some one-item fields, like the ones for the date,
@@ -113,6 +123,27 @@ def validate_meta(csv_doc: str) -> list:
                             error_final_report.append(
                                 create_error_dict(validation_level='csv_wellformedness', error_type='error',
                                                   message=message, error_label='date_format', located_in='item',
+                                                  table=table))
+
+                if field == 'publisher':
+                    # TODO: consider creating specific functions for 'editor' field, instead of using the same
+                    #  validation functions as for 'author' and 'editor'. E.g. some inconsistencies might arise as
+                    #  for what concerns legal chars and separators (the latter are not applicable for the
+                    #  'publisher' field).
+                    if content(value):
+                        if not wellformedness_ra_item(value):
+                            message = messages['m9']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='ra_item_format', located_in='item',
+                                                  table=table))
+                        if orphan_ra_id(value):
+                            message = messages['m10']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='orphan_ra_ids', located_in='item',
                                                   table=table))
 
         # GET BIBLIOGRAPHIC ENTITIES

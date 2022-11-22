@@ -42,45 +42,45 @@ def validate_cits(csv_doc: str) -> list:
                             create_error_dict(validation_level='csv_wellformedness', error_type='error',
                                               message=message, error_label='required_value_cits', located_in='field',
                                               table=table))
+                    else:  # i.e. if string is not empty...
+                        ids_set = set()  # set where to put valid IDs only
+                        items = re.split(r'\s', value)
 
-                    ids_set = set()  # set where to put valid IDs only
-                    items = re.split(r'\s', value)
+                        for item_idx, item in enumerate(items):
 
-                    for item_idx, item in enumerate(items):
-
-                        if item == '':
-                            message = messages['m1']
-                            table = {row_idx: {field: [item_idx]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='extra_space', located_in='item',
-                                                  table=table))
-
-                        elif not wellformedness_br_id(item):
-                            message = messages['m2']
-                            table = {row_idx: {field: [item_idx]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='br_id_format', located_in='item',
-                                                  table=table))
-
-                        else:
-                            # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
-
-                            if item not in ids_set:
-                                ids_set.add(item)
-                            else:  # in-field duplication of the same ID
-                                table = {row: {field: [i for i, v in enumerate(item) if v == item]}}
-                                message = messages['m6']
-
+                            if item == '':
+                                message = messages['m1']
+                                table = {row_idx: {field: [item_idx]}}
                                 error_final_report.append(
                                     create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                      message=message, error_label='duplicate_id', located_in='item',
-                                                      table=table)  # valid=False
-                                )
+                                                      message=message, error_label='extra_space', located_in='item',
+                                                      table=table))
 
-                    if len(ids_set) >= 1:
-                        id_fields_instances.append(ids_set)
+                            elif not wellformedness_br_id(item):
+                                message = messages['m2']
+                                table = {row_idx: {field: [item_idx]}}
+                                error_final_report.append(
+                                    create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                      message=message, error_label='br_id_format', located_in='item',
+                                                      table=table))
+
+                            else:
+                                # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
+
+                                if item not in ids_set:
+                                    ids_set.add(item)
+                                else:  # in-field duplication of the same ID
+                                    table = {row: {field: [i for i, v in enumerate(item) if v == item]}}
+                                    message = messages['m6']
+
+                                    error_final_report.append(
+                                        create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                          message=message, error_label='duplicate_id', located_in='item',
+                                                          table=table)  # 'valid'=False
+                                    )
+
+                        if len(ids_set) >= 1:
+                            id_fields_instances.append(ids_set)
 
                 if field == 'citing_publication_date' or field == 'cited_publication_date':
                     # todo: consider splitting into items also some one-item fields, like the ones for the date,
@@ -96,7 +96,6 @@ def validate_cits(csv_doc: str) -> list:
 
         # GET BIBLIOGRAPHIC ENTITIES
         entities = group_ids(id_fields_instances)
-
         # GET SELF-CITATIONS AND DUPLICATE CITATIONS (returns the list of error reports)
         duplicate_report = get_duplicates_cits(entities=entities, data_dict=data_dict, messages=messages)
 
