@@ -8,7 +8,7 @@ import re
 from pprint import pprint
 import yaml
 from csv import DictReader
-from get_duplicates import get_duplicates_cits
+from meta_duplicates import get_duplicates_meta
 
 csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/test_0.csv'
 
@@ -44,74 +44,86 @@ def validate_meta(csv_doc: str) -> list:
             #  strategy for required fields...), otherwise you'll get an error for every missing value!
 
             for field, value in row.items():
-                if field == 'id':
+                if content(value):
+                    if field == 'id':
+                        br_ids_set = set()  # set where to put valid br IDs only
+                        items = re.split(r'\s', value)
 
-                    br_ids_set = set()  # set where to put valid br IDs only
-                    items = re.split(r'\s', value)
+                        for item_idx, item in enumerate(items):
 
-                    for item_idx, item in enumerate(items):
-
-                        if item == '':
-                            message = messages['m1']
-                            table = {row_idx: {field: [item_idx]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='extra_space', located_in='item',
-                                                  table=table))
-
-                        elif not wellformedness_br_id(item):
-                            message = messages['m2']
-                            table = {row_idx: {field: [item_idx]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='br_id_format', located_in='item',
-                                                  table=table))
-
-                        else:
-                            # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
-
-                            if item not in br_ids_set:
-                                br_ids_set.add(item)
-                            else:  # in-field duplication of the same ID
-                                table = {row: {field: [i for i, v in enumerate(item) if v == item]}}
-                                message = messages['m6']
-
+                            if item == '':
+                                message = messages['m1']
+                                table = {row_idx: {field: [item_idx]}}
                                 error_final_report.append(
                                     create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                      message=message, error_label='duplicate_id', located_in='item',
-                                                      table=table)  # valid=False
-                                )
+                                                      message=message, error_label='extra_space', located_in='item',
+                                                      table=table))
 
-                    if len(br_ids_set) >= 1:
-                        br_id_groups.append(br_ids_set)
+                            elif not wellformedness_br_id(item):
+                                message = messages['m2']
+                                table = {row_idx: {field: [item_idx]}}
+                                error_final_report.append(
+                                    create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                      message=message, error_label='br_id_format', located_in='item',
+                                                      table=table))
+
+                            else:
+                                # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
+
+                                if item not in br_ids_set:
+                                    br_ids_set.add(item)
+                                else:  # in-field duplication of the same ID
+                                    table = {row: {field: [i for i, v in enumerate(item) if v == item]}}
+                                    message = messages['m6']
+
+                                    error_final_report.append(
+                                        create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                          message=message, error_label='duplicate_id', located_in='item',
+                                                          table=table)  # valid=False
+                                    )
+
+                        if len(br_ids_set) >= 1:
+                            br_id_groups.append(br_ids_set)
 
                 if field == 'title':
-                    if value.isupper():
-                        message = messages['m8']
-                        table = {row_idx: {field: [0]}}
-                        error_final_report.append(
-                            create_error_dict(validation_level='csv_wellformedness', error_type='warning',
-                                              message=message, error_label='uppercase_title', located_in='item',
-                                              table=table, valid=True))
+                    if content(value):
+                        if value.isupper():
+                            message = messages['m8']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='warning',
+                                                  message=message, error_label='uppercase_title', located_in='item',
+                                                  table=table, valid=True))
 
                 if field == 'author' or field == 'editor':
-                    items = re.split(r';\s', value)
+                    if content(value):
+                        items = re.split(r';\s', value)
 
-                    for item_idx, item in enumerate(items):
-                        if not wellformedness_ra_item(item):
-                            message = messages['m9']
-                            table = {row_idx: {field: [item_idx]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='ra_item_format', located_in='item',
-                                                  table=table))
-                        if orphan_ra_id(item):
-                            message = messages['m10']
-                            table = {row_idx: {field: [item_idx]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='orphan_ra_ids', located_in='item',
-                                                  table=table))
+                        for item_idx, item in enumerate(items):
+
+                            if orphan_ra_id(item):
+                                message = messages['m10']
+                                table = {row_idx: {field: [item_idx]}}
+                                error_final_report.append(
+                                    create_error_dict(validation_level='csv_wellformedness', error_type='warning',
+                                                      message=message, error_label='orphan_ra_ids', located_in='item',
+                                                      table=table, valid=True))
+
+                            if not wellformedness_people_item(item):
+                                message = messages['m9']
+                                table = {row_idx: {field: [item_idx]}}
+                                error_final_report.append(
+                                    create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                      message=message, error_label='people_item_format', located_in='item',
+                                                      table=table))
+
+                            else:
+                                ids = [m.group() for m in
+                                       re.finditer(r'((?:crossref|orcid|viaf|wikidata|ror):\S+)(?=\s|\])', item)]
+
+                                for id in ids:
+                                    pass
+                                    # TODO: ADD CHECKS FOR lev2 and lev3 for each id inside the current item
 
                 if field == 'pub_date':
                     # todo: consider splitting into items also some one-item fields, like the ones for the date,
@@ -126,36 +138,39 @@ def validate_meta(csv_doc: str) -> list:
                                                   table=table))
 
                 if field == 'publisher':
-                    # TODO: consider creating specific functions for 'editor' field, instead of using the same
-                    #  validation functions as for 'author' and 'editor'. E.g. some inconsistencies might arise as
-                    #  for what concerns legal chars and separators (the latter are not applicable for the
-                    #  'publisher' field).
                     if content(value):
-                        if not wellformedness_ra_item(value):
-                            message = messages['m9']
-                            table = {row_idx: {field: [0]}}
-                            error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                  message=message, error_label='ra_item_format', located_in='item',
-                                                  table=table))
                         if orphan_ra_id(value):
                             message = messages['m10']
                             table = {row_idx: {field: [0]}}
                             error_final_report.append(
-                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                create_error_dict(validation_level='csv_wellformedness', error_type='warning',
                                                   message=message, error_label='orphan_ra_ids', located_in='item',
+                                                  table=table, valid=True))
+
+                        if not wellformedness_publisher_item(value):
+                            message = messages['m9']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='publisher_format', located_in='item',
                                                   table=table))
+
+                        else:
+                            ids = [m.group() for m in
+                                   re.finditer(r'((?:crossref|orcid|viaf|wikidata|ror):\S+)(?=\s|\])', item)]
+
+                            for id in ids:
+                                pass
+                                # TODO: ADD CHECKS FOR lev2 and lev3 for each id inside the current item
 
         # GET BIBLIOGRAPHIC ENTITIES
         br_entities = group_ids(br_id_groups)
-        ra_entities = group_ids(ra_id_groups)
 
-        # TODO: find duplicates for META-CSV and change this part!!
-        # GET SELF-CITATIONS AND DUPLICATE CITATIONS (returns the list of error reports)
-        # duplicate_report = get_duplicates_cits(entities=br_entities, data_dict=data_dict, messages=messages)
-        #
-        # if duplicate_report:
-        #     error_final_report.extend(duplicate_report)
+        # GET DUPLICATE BIBLIOGRAPHIC ENTITIES (returns the list of error reports)
+        duplicate_report = get_duplicates_meta(entities=br_entities, data_dict=data_dict, messages=messages)
+
+        if duplicate_report:
+            error_final_report.extend(duplicate_report)
 
         return error_final_report
 

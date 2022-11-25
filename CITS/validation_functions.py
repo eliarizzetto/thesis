@@ -1,6 +1,7 @@
 # This module contains the validation functions for a CITS-CSV instance.
 
-from re import match
+from re import match, search, sub
+
 
 def wellformedness_id_field(id_field):
     """
@@ -9,11 +10,12 @@ def wellformedness_id_field(id_field):
     :param id_field: str, the whole string value of 'citing_id', 'cited_id' or 'id'
     :return: bool
     """
-    id_field_pattern = r'^\S+( \S+)*$' # no multiple adjacent spaces, no spaces at the beginning or end of the string!
+    id_field_pattern = r'^\S+( \S+)*$'  # no multiple adjacent spaces, no spaces at the beginning or end of the string!
     if match(id_field_pattern, id_field):
         return True
     else:
         return False
+
 
 def wellformedness_br_id(id_element):
     """
@@ -28,9 +30,10 @@ def wellformedness_br_id(id_element):
     else:
         return False
 
-def wellformedness_ra_item(ra_item:str):
+
+def wellformedness_people_item(ra_item: str):
     """
-    Validates the well-formedness of an item inside the 'author', 'publisher' or 'editor' field of a row,
+    Validates the well-formedness of an item inside the 'author' or 'editor' field of a row,
     checking its compliance with META-CSV syntax.
     :param ra_item: str
     :return: bool
@@ -44,17 +47,32 @@ def wellformedness_ra_item(ra_item:str):
     else:
         return False
 
-def orphan_ra_id(ra_item:str):
+def wellformedness_publisher_item(ra_item: str):
+    """
+    Validates the well-formedness of an item inside the 'publisher' field of a row,
+    checking its compliance with META-CSV syntax.
+    :param ra_item: str
+    :return: bool
+    """
+    outside_brackets_pub = r'(?:[^\s\[\]]+(?:\s[^\s\[\]]+)*)'
+    inside_brackets = r'\[(crossref|orcid|viaf|wikidata|ror):\S+(?:\s(crossref|orcid|viaf|wikidata|ror):\S+)*\]'
+    ra_item_pattern = f'^(?:({outside_brackets_pub}\\s{inside_brackets})|({outside_brackets_pub})|({inside_brackets}))$'
+
+    if match(ra_item_pattern, ra_item):
+        return True
+    else:
+        return False
+
+def orphan_ra_id(ra_item: str):
     """
     Looks for possible ID of responsible agents ('author', 'publisher' or 'editor') that are NOT enclosed in
-    brackets, as they should be. Returns True if the input string il likely to be a R.A. ID or a sequence of R.A. IDs
-    separated by a single space. :param ra_item: the item inside a R.A. field, as it is split by the '; ' separator.
-    :return: bool, True if a match is found (the string is likely NOT well-formed), False if NO match is found (the
-    string is more likely to be well-formed).
+    brackets, as they should be. Returns True if the input string is likely to contain one or more R.A. ID outside
+    square brackets.
+    :param ra_item: the item inside a R.A. field, as it is split by the '; ' separator.
+    :return:
+    bool, True if a match is found (the string is likely NOT well-formed), False if NO match is found.
     """
-    ra_id_outside_brackets_pattern = r'^\s*(?:(crossref|orcid|viaf|wikidata|ror):\S+\s*)+$'
-
-    if match(ra_id_outside_brackets_pattern, ra_item):
+    if search(r'(crossref|orcid|viaf|wikidata|ror):', sub(r'\[.*\]', '', ra_item)):
         return True
     else:
         return False
