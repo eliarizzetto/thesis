@@ -38,6 +38,8 @@ def wellformedness_people_item(ra_item: str):
     :param ra_item: str
     :return: bool
     """
+    # todo: create stricter regex for not allowing characters that are likely to be illegal in a person's name/surname
+    #   (e.g. digits, apostrophe, underscore, full-stop, etc.)
     outside_brackets = r'(?:[^\s,;\[\]]+(?:\s[^\s,;\[\]]+)*),?(?:\s[^\s,;\[\]]+)*'
     inside_brackets = r'\[(crossref|orcid|viaf|wikidata|ror):\S+(?:\s(crossref|orcid|viaf|wikidata|ror):\S+)*\]'
     ra_item_pattern = f'^(?:({outside_brackets}\\s{inside_brackets})|({outside_brackets})|({inside_brackets}))$'
@@ -46,6 +48,7 @@ def wellformedness_people_item(ra_item: str):
         return True
     else:
         return False
+
 
 def wellformedness_publisher_item(ra_item: str):
     """
@@ -62,6 +65,7 @@ def wellformedness_publisher_item(ra_item: str):
         return True
     else:
         return False
+
 
 def orphan_ra_id(ra_item: str):
     """
@@ -87,6 +91,72 @@ def wellformedness_date(date_field):
     """
     date_pattern = r'^((?:\d{4}\-(?:0[1-9]|1[012])(?:\-(?:0[1-9]|[12][0-9]|3[01]))?)|(?:\d{4}))$'
     if match(date_pattern, date_field):
+        return True
+    else:
+        return False
+
+
+def wellformedness_venue(venue_value: str):
+    """
+    Validates the well-formedness of the string inside the 'venue' field of a row,
+    checking its compliance with META-CSV syntax.
+    :param venue_value: str
+    :return: bool
+    """
+    outside_brackets_venue = r'(?:[^\s\[\]]+(?:\s[^\s\[\]]+)*)'
+    # pmid and pmcid are not valid identifiers for 'venues'!
+    inside_brackets_venue = r'\[(doi|issn|isbn|url|wikidata|wikipedia):\S+(?:\s(doi|issn|isbn|url|wikidata|wikipedia):\S+)*\]'
+    venue_pattern = f'^(?:({outside_brackets_venue}\\s{inside_brackets_venue})|({outside_brackets_venue})|({inside_brackets_venue}))$'
+
+    if match(venue_pattern, venue_value):
+        return True
+    else:
+        return False
+
+
+def orphan_venue_id(venue_value: str):
+    """
+    Looks for IDs of BRs that might be a venue but are NOT enclosed in brackets, as they should be. Returns True if the
+    input string is likely to contain one or more BR ID outside square brackets.
+    :param venue_value: the value of the 'venue' field of a row.
+    :return:
+    bool, True if a match is found (the string is likely NOT well-formed), False if NO match is found.
+    """
+    if search(r'(doi|issn|isbn|url|wikidata|wikipedia):', sub(r'\[.*\]', '', venue_value)):
+        return True
+    else:
+        return False
+
+
+def wellformedness_volume_issue(vi_value: str):
+    """
+    Validates the well-formedness of the string inside the 'volume' or 'issue' field of a row,
+    checking its compliance with META-CSV syntax.
+    :param vi_value: str
+    :return: bool
+    """
+    vi_pattern = r'^\S+(?:\s\S+)*$'
+
+    if match(vi_pattern, vi_value):
+        return True
+    else:
+        return False
+
+
+def wellformedness_page(page_value: str):
+    """
+    Validates the well-formedness of the string inside the 'page' field of a row,
+    checking its compliance with META-CSV syntax.
+    :param page_value: str
+    :return: bool
+    """
+    # todo: create stricter regex for roman numerals and valid intervals
+    # NB: incorrect roman numerals and impossible ranges (e.g. 200-20) still validate!
+    natural_numbers = r'^(?:[1-9][0-9]*)-(?:[1-9][0-9]*)$'
+    roman_numerals = r'^(?:[IiVvXxLlCcDdMm]+)-(?:[IiVvXxLlCcDdMm]+)$'
+    page_pattern = f'{natural_numbers}|{roman_numerals}'
+
+    if match(page_pattern, page_value):
         return True
     else:
         return False

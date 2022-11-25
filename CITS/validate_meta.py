@@ -31,7 +31,6 @@ def validate_meta(csv_doc: str) -> list:
         messages = yaml.full_load(open('messages.yaml', 'r', encoding='utf-8'))
 
         br_id_groups = []
-        ra_id_groups = []
 
         for row_idx, row in enumerate(data_dict):
 
@@ -44,8 +43,9 @@ def validate_meta(csv_doc: str) -> list:
             #  strategy for required fields...), otherwise you'll get an error for every missing value!
 
             for field, value in row.items():
-                if content(value):
-                    if field == 'id':
+
+                if field == 'id':
+                    if content(value):
                         br_ids_set = set()  # set where to put valid br IDs only
                         items = re.split(r'\s', value)
 
@@ -78,8 +78,8 @@ def validate_meta(csv_doc: str) -> list:
 
                                     error_final_report.append(
                                         create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                          message=message, error_label='duplicate_id', located_in='item',
-                                                          table=table)  # valid=False
+                                                          message=message, error_label='duplicate_id',
+                                                          located_in='item', table=table)  # valid=False
                                     )
 
                         if len(br_ids_set) >= 1:
@@ -106,7 +106,7 @@ def validate_meta(csv_doc: str) -> list:
                                 table = {row_idx: {field: [item_idx]}}
                                 error_final_report.append(
                                     create_error_dict(validation_level='csv_wellformedness', error_type='warning',
-                                                      message=message, error_label='orphan_ra_ids', located_in='item',
+                                                      message=message, error_label='orphan_ra_id', located_in='item',
                                                       table=table, valid=True))
 
                             if not wellformedness_people_item(item):
@@ -114,8 +114,8 @@ def validate_meta(csv_doc: str) -> list:
                                 table = {row_idx: {field: [item_idx]}}
                                 error_final_report.append(
                                     create_error_dict(validation_level='csv_wellformedness', error_type='error',
-                                                      message=message, error_label='people_item_format', located_in='item',
-                                                      table=table))
+                                                      message=message, error_label='people_item_format',
+                                                      located_in='item', table=table))
 
                             else:
                                 ids = [m.group() for m in
@@ -137,6 +137,67 @@ def validate_meta(csv_doc: str) -> list:
                                                   message=message, error_label='date_format', located_in='item',
                                                   table=table))
 
+                if field == 'venue':
+                    if content(value):
+
+                        if orphan_venue_id(value):
+                            message = messages['m15']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='warning',
+                                                  message=message, error_label='orphan_venue_id', located_in='item',
+                                                  table=table, valid=True))
+
+                        if not wellformedness_venue(value):
+                            message = messages['m12']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='venue_format', located_in='item',
+                                                  table=table))
+
+                        else:
+                            ids = [m.group() for m in
+                                   re.finditer(r'((?:doi|issn|isbn|url|wikidata|wikipedia):\S+)(?=\s|\])', value)]
+
+                            for id in ids:
+                                pass
+                                # TODO: ADD CHECKS FOR lev2 and lev3 for each id inside the current item
+
+                if field == 'volume':
+                    if content(value):
+                        if not wellformedness_volume_issue(value):
+                            message = messages['m13']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='volume_issue_format', located_in='item',
+                                                  table=table))
+
+                if field == 'issue':
+                    if content(value):
+                        if not wellformedness_volume_issue(value):
+                            message = messages['m13']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='volume_issue_format', located_in='item',
+                                                  table=table))
+
+                if field == 'page':
+                    if content(value):
+                        if not wellformedness_page(value):
+                            message = messages['m14']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='page_format', located_in='item',
+                                                  table=table))
+
+                if field == 'type':
+                    if content(value):
+                        pass
+
                 if field == 'publisher':
                     if content(value):
                         if orphan_ra_id(value):
@@ -144,7 +205,7 @@ def validate_meta(csv_doc: str) -> list:
                             table = {row_idx: {field: [0]}}
                             error_final_report.append(
                                 create_error_dict(validation_level='csv_wellformedness', error_type='warning',
-                                                  message=message, error_label='orphan_ra_ids', located_in='item',
+                                                  message=message, error_label='orphan_ra_id', located_in='item',
                                                   table=table, valid=True))
 
                         if not wellformedness_publisher_item(value):
