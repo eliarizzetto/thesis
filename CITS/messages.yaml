@@ -56,4 +56,8 @@ m14: >
 m15: >
   SCRIVI MESSAGGIO PER ID DI B.R. NEL FIELD >>VENUE<< (!) CHE SI TROVANO FUORI DALLE PARENTESI (warning)
 
+m16: >
+  SCRIVI MESSAGGIO PER FORMATO DI TYPE. (tieni sempre presente che la validazione è molto severa, es. se c'è anche solo
+  uno spazio in più, tutto il field - essendoci un solo item - risulta NON valido!)
+
 

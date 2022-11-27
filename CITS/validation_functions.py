@@ -160,3 +160,22 @@ def wellformedness_page(page_value: str):
         return True
     else:
         return False
+
+
+def wellformedness_type(type_value: str):
+    """
+    Validates the well-formedness of the string inside the 'type' field of a row,
+    checking its compliance with META-CSV syntax.
+    :param type_value: str
+    :return: bool
+    """
+    valid_types = ['book', 'book chapter', 'book part', 'book section', 'book series', 'book set', 'book track',
+                   'component', 'dataset', 'data file', 'dissertation', 'edited book', 'journal', 'journal article',
+                   'journal issue', 'journal volume', 'monograph', 'other', 'peer review', 'posted content',
+                   'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
+                   'reference entry', 'report', 'report series', 'standard', 'standard series']
+
+    if type_value in valid_types:
+        return True
+    else:
+        return False

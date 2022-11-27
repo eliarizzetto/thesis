@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\validation_process\validation\test_files\cits_example.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\validation_process\validation\test_files\sample_cits.csv">
           <value>
             <Attribute>
@@ -25,6 +32,13 @@
           </value>
         </entry>
         <entry key="\validation_process\validation\test_files\test_0.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\validation_process\validation\test_files\test_session002.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

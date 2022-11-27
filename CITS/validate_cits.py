@@ -10,7 +10,7 @@ import yaml
 from csv import DictReader
 from get_duplicates import get_duplicates_cits
 
-csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/sample_cits.csv'
+csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/cits_example.csv'
 
 
 def validate_cits(csv_doc: str) -> list:

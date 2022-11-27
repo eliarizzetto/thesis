@@ -69,6 +69,7 @@ def validate_meta(csv_doc: str) -> list:
 
                             else:
                                 # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
+                                pass
 
                                 if item not in br_ids_set:
                                     br_ids_set.add(item)
@@ -196,7 +197,13 @@ def validate_meta(csv_doc: str) -> list:
 
                 if field == 'type':
                     if content(value):
-                        pass
+                        if not wellformedness_type(value):
+                            message = messages['m16']
+                            table = {row_idx: {field: [0]}}
+                            error_final_report.append(
+                                create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                                  message=message, error_label='type_format', located_in='item',
+                                                  table=table))
 
                 if field == 'publisher':
                     if content(value):

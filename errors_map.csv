@@ -15,5 +15,6 @@
 "venue ID outside brackets","a string likely to be an ID for a venue or a sequence of such is found NOT enclosed in brackets","meta-csv","orphan_venue_id","csv_wellformedness","warning","orphan_venue_id","'venue'","true","item","","",""
 "volume and issue format","any format error in 'volume' or 'issue'","meta-csv","wellformedness_volume_issue","csv_wellformedness","error","volume_issue_format","'volume' and 'issue'","false","item","","",""
 "page format","any format error in 'page'","meta-csv","wellformedness_page","csv_wellformedness","error","page_format","'page'","false","item","","","so far, impossibile intervals and roman numerals still validate"
+"type format","any format error in 'type'","meta-csv","wellformedness_type","csv_wellformedness","error","type_format","'type'","false","item","","",""
 "","","","","","","","","","","","",""
 "","","","","","","","","","","","",""

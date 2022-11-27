@@ -15,27 +15,28 @@ def get_duplicates_meta(entities: list, data_dict: list, messages) -> list:
     visited_dicts = []
     report = []
     for row_idx, row in enumerate(data_dict):
-        br = {}
-
+        br = {'meta_id': None, 'table': {}}
         items = re.split(r'\s', row['id'])
 
-        for item_idx, item in enumerate(items):
-            for set_idx, set in enumerate(entities):
-                if item in set:  # mapping the single ID to its corresponding set representing the bibl. entity
-                    br['meta_id'] = set_idx
-                    br['table'] = {row_idx: {'id': list(range(len(items)))}}
-                    break
-            break
+        for item in items:
+            if not br['meta_id']:
+                for set_idx, set in enumerate(entities):
+                    if item in set:  # mapping the single ID to its corresponding set representing the bibl. entity
+                        br['meta_id'] = str(set_idx)
+                        br['table'] = {row_idx: {'id': list(range(len(items)))}}
+                        break
 
-        if not visited_dicts:  # just for the first round of the iteration (when visited_dicts is empty)
-            visited_dicts.append(br)
-        else:
-            for visited_br_idx, visited_br in enumerate(visited_dicts):
-                if br['meta_id'] == visited_br['meta_id']:
-                    visited_dicts[visited_br_idx]['table'].update(br['table'])
-                    break
-                elif visited_br_idx == (len(visited_dicts) - 1):
-                    visited_dicts.append(br)
+        # process row only if a meta_id has been associated to it (i.e. id field contains at least one valid identifier)
+        if br['meta_id']:
+            if not visited_dicts:  # just for the first round of the iteration (when visited_dicts is empty)
+                visited_dicts.append(br)
+            else:
+                for visited_br_idx, visited_br in enumerate(visited_dicts):
+                    if br['meta_id'] == visited_br['meta_id']:
+                        visited_dicts[visited_br_idx]['table'].update(br['table'])
+                        break
+                    elif visited_br_idx == (len(visited_dicts) - 1):
+                        visited_dicts.append(br)
 
     for d in visited_dicts:
         if len(d['table']) > 1:  # if there's more than 1 row in table for a br (duplicate rows error)
