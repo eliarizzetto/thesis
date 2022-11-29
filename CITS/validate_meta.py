@@ -9,6 +9,7 @@ from pprint import pprint
 import yaml
 from csv import DictReader
 from meta_duplicates import get_duplicates_meta
+from meta_required_fields import missing_values
 
 csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/test_0.csv'
 
@@ -34,13 +35,15 @@ def validate_meta(csv_doc: str) -> list:
 
         for row_idx, row in enumerate(data_dict):
 
-            # TODO: CONSIDER INITIALIZING A DICTIONARY FOR LATER CHECKING REQUIRED FIELDS IN ROW. A proper value for
-            #  each visited field of the row would be added here, and later the conditional requirements would be
-            #  checked, right before the closure of the loop for this row. The default behaviour in visiting single
-            #  fields would be: if not content -> add proper value in the dict
+            missing_required_fields = missing_values(row)  # dict w/ positions of error in row; empty if row is fine
+            if missing_required_fields:
+                message = messages['m17']
+                table = {row_idx: missing_required_fields}
+                error_final_report.append(
+                    create_error_dict(validation_level='csv_wellformedness', error_type='error',
+                                      message=message, error_label='required_fields', located_in='field',
+                                      table=table))
 
-            # TODO: remember to add 'if content' condition also before checking fields (taking into consideration the
-            #  strategy for required fields...), otherwise you'll get an error for every missing value!
 
             for field, value in row.items():
 

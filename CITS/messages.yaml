@@ -60,4 +60,8 @@ m16: >
   SCRIVI MESSAGGIO PER FORMATO DI TYPE. (tieni sempre presente che la validazione è molto severa, es. se c'è anche solo
   uno spazio in più, tutto il field - essendoci un solo item - risulta NON valido!)
 
+m17: >
+  SCRIVI MESSAGGIO PER I REQUIRED FIELDS NON SPECIFICATI IN META (comprende sia i casi in cui i valori non sono specificati
+  sia i casi in cui il valore di 'type' non è ('journal article'|'journal volume'|'journal issue') anche se dovrebbe
+  così, dal momento che è specificato un valore in ('volume'|'issue'). 
 
