@@ -65,3 +65,6 @@ m17: >
   sia i casi in cui il valore di 'type' non è ('journal article'|'journal volume'|'journal issue') anche se dovrebbe
   così, dal momento che è specificato un valore in ('volume'|'issue'). 
 
+m18: >
+  SCRIVI MESSAGGIO PER INTERVALLI DI PAGINE IMPOSSIBILI (O NON CONVERTIBILI, vedi funzione check_page_interval)
+

@@ -197,6 +197,14 @@ def validate_meta(csv_doc: str) -> list:
                                 create_error_dict(validation_level='csv_wellformedness', error_type='error',
                                                   message=message, error_label='page_format', located_in='item',
                                                   table=table))
+                        else:
+                            if not check_page_interval(value):
+                                message = messages['m18']
+                                table = {row_idx: {field: [0]}}
+                                error_final_report.append(
+                                    create_error_dict(validation_level='csv_wellformedness', error_type='warning',
+                                                      message=message, error_label='page_interval', located_in='item',
+                                                      table=table, valid=True))
 
                 if field == 'type':
                     if content(value):

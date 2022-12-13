@@ -1,7 +1,7 @@
 # This module contains the validation functions for a CITS-CSV instance.
 
 from re import match, search, sub
-
+from roman import fromRoman, InvalidRomanNumeralError
 
 def wellformedness_id_field(id_field):
     """
@@ -152,11 +152,39 @@ def wellformedness_page(page_value: str):
     """
     # todo: create stricter regex for roman numerals and valid intervals
     # NB: incorrect roman numerals and impossible ranges (e.g. 200-20) still validate!
-    natural_numbers = r'^(?:[1-9][0-9]*)-(?:[1-9][0-9]*)$'
-    roman_numerals = r'^(?:[IiVvXxLlCcDdMm]+)-(?:[IiVvXxLlCcDdMm]+)$'
-    page_pattern = f'{natural_numbers}|{roman_numerals}'
+    natural_number = r'([1-9][0-9]*)'
+    roman_numeral = r'([IiVvXxLlCcDdMm]+)'
+    single_alphanum = r'((?:(?:[A-Za-z]|[α-ωΑ-Ω])?[1-9]\d*)|(?:[1-9]\d*(?:[A-Za-z]|[α-ωΑ-Ω])?))'
+    normal_page_pattern = f'^(?:{natural_number}|{roman_numeral})-(?:{natural_number}|{roman_numeral})$'
+    alphanum_page_pattern = f'^{single_alphanum}-{single_alphanum}$'
 
-    if match(page_pattern, page_value):
+    if match(normal_page_pattern, page_value):
+        return True
+    elif match(alphanum_page_pattern, page_value):
+        return True
+    else:
+        return False
+
+def check_page_interval(page_interval:str):
+    """
+    Validates the interval expressed in the 'page' field, verifying that the start page is smaller than the end page.
+    :param page_interval: the value of the 'page' field
+    :return: True if the interval is valid OR if it is impossibile to convert it to an integer. False if the interval
+        has been converted and it is invalid.
+    """
+
+    both_num = page_interval.split('-')
+    converted = []
+    for num_str in both_num:
+        if num_str.isnumeric():
+            converted.append(int(num_str))
+        else:
+            try:
+                converted.append(fromRoman(num_str.upper()))
+            except InvalidRomanNumeralError:
+                return False
+
+    if converted[0] < converted[1]:
         return True
     else:
         return False
