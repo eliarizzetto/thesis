@@ -201,7 +201,7 @@ def wellformedness_type(type_value: str):
                    'component', 'dataset', 'data file', 'dissertation', 'edited book', 'journal', 'journal article',
                    'journal issue', 'journal volume', 'monograph', 'other', 'peer review', 'posted content',
                    'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
-                   'reference entry', 'report', 'report series', 'standard', 'standard series']
+                   'reference entry', 'report', 'report series', 'series' 'standard', 'standard series']
 
     if type_value in valid_types:
         return True

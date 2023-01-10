@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\id_types_alignment.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\validation_process\prove\temp_prova.csv">
           <value>
             <Attribute>
