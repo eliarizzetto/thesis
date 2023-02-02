@@ -15,7 +15,12 @@ from CITS.oc_idmanager import doi, isbn, issn, orcid, pmcid, pmid, ror, url, via
 
 
 def check_id_syntax(id:str):
-
+    """
+    Checks the specific external syntax of each identifier schema, calling the .syntax_ok() method from every IdManager
+    module.
+    :param id: the identifier (with or without its prefix)
+    :return: bool
+    """
     oc_prefix = id[:(id.index(':')+1)]
 
     if oc_prefix == 'doi:':
@@ -54,6 +59,12 @@ def check_id_syntax(id:str):
 
 
 def check_id_existence(id:str):
+    """
+    Checks if a specific identifier is registered in the service it is provided by, by a request to the relative API,
+    calling the .exists() method from every IdManager module.
+    :param id: the string of the ID without the prefix
+    :return: bool
+    """
 
     oc_prefix = id[:(id.index(':')+1)]
 

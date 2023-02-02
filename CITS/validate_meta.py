@@ -10,6 +10,7 @@ import yaml
 from csv import DictReader
 from meta_duplicates import get_duplicates_meta
 from meta_required_fields import missing_values
+from json import load
 
 csv_doc = 'C:/Users/media/Desktop/thesis23/thesis_resources/validation_process/validation/test_files/test_0.csv'
 
@@ -30,6 +31,7 @@ def validate_meta(csv_doc: str) -> list:
         error_final_report = []
 
         messages = yaml.full_load(open('messages.yaml', 'r', encoding='utf-8'))
+        id_type_dict = load(open('id_type_alignment.json', 'r', encoding='utf-8')) # for ID-type alignment (semantics)
 
         br_id_groups = []
 
@@ -43,6 +45,9 @@ def validate_meta(csv_doc: str) -> list:
                     create_error_dict(validation_level='csv_wellformedness', error_type='error',
                                       message=message, error_label='required_fields', located_in='field',
                                       table=table))
+            else:
+                pass
+                # TODO: AGGIUNGI FUNZIONE PER VALIDARE SEMANTICA DELLA ROW (ID-TYPE ALIGNMENT)
 
 
             for field, value in row.items():
@@ -71,9 +76,6 @@ def validate_meta(csv_doc: str) -> list:
                                                       table=table))
 
                             else:
-                                # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
-                                pass
-
                                 if item not in br_ids_set:
                                     br_ids_set.add(item)
                                 else:  # in-field duplication of the same ID
@@ -85,6 +87,17 @@ def validate_meta(csv_doc: str) -> list:
                                                           message=message, error_label='duplicate_id',
                                                           located_in='item', table=table)  # valid=False
                                     )
+                                # TODO: ADD CHECK ON LEVEL 2 (EXTERNAL SYNTAX) AND 3 (SEMANTICS) FOR THE SINGLE IDs
+
+                                #  2nd validation level: EXTERNAL SYNTAX
+                                if not check_id_syntax(item):
+                                    message = messages['m19']
+                                    table = {row_idx: {field: [item_idx]}}
+                                    error_final_report.append(
+                                        create_error_dict(validation_level='external_syntax', error_type='error',
+                                                          message=message, error_label='br_id_syntax',
+                                                          located_in='item',
+                                                          table=table))
 
                         if len(br_ids_set) >= 1:
                             br_id_groups.append(br_ids_set)

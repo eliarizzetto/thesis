@@ -1,7 +1,10 @@
 # This module contains the validation functions for a CITS-CSV instance.
+import json
 
+from CITS.oc_idmanager import doi, isbn, issn, orcid, pmcid, pmid, ror, url, viaf, wikidata, wikipedia
 from re import match, search, sub
 from roman import fromRoman, InvalidRomanNumeralError
+from json import load
 
 def wellformedness_id_field(id_field):
     """
@@ -170,7 +173,7 @@ def check_page_interval(page_interval:str):
     Validates the interval expressed in the 'page' field, verifying that the start page is smaller than the end page.
     :param page_interval: the value of the 'page' field
     :return: True if the interval is valid OR if it is impossibile to convert it to an integer. False if the interval
-        has been converted and it is invalid.
+        has been converted AND it is invalid, or if it does not need to be converted and it is invalid.
     """
 
     both_num = page_interval.split('-')
@@ -203,7 +206,97 @@ def wellformedness_type(type_value: str):
                    'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
                    'reference entry', 'report', 'report series', 'series' 'standard', 'standard series']
 
+
     if type_value in valid_types:
         return True
     else:
         return False
+
+
+def check_id_syntax(id:str):
+    """
+    Checks the specific external syntax of each identifier schema, calling the .syntax_ok() method from every IdManager
+    module.
+    :param id: the identifier (with or without its prefix)
+    :return: bool
+    """
+    oc_prefix = id[:(id.index(':')+1)]
+
+    if oc_prefix == 'doi:':
+        vldt = doi.DOIManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'isbn:':
+        vldt = isbn.ISBNManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'issn:':
+        vldt = issn.ISSNManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'orcid:':
+        vldt = orcid.ORCIDManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'pmcid:':
+        vldt = pmcid.PMCIDManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'pmid:':
+        vldt = pmid.PMIDManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'ror:':
+        vldt = ror.RORManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'url:':
+        vldt = url.URLManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'viaf:':
+        vldt = viaf.ViafManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'wikidata:':
+        vldt = wikidata.WikidataManager()
+        return vldt.syntax_ok(id)
+    if oc_prefix == 'wikipedia:':
+        vldt = wikipedia.WikipediaManager()
+        return vldt.syntax_ok(id)
+
+
+def check_id_existence(id:str):
+    """
+    Checks if a specific identifier is registered in the service it is provided by, by a request to the relative API,
+    calling the .exists() method from every IdManager module.
+    :param id: the string of the ID without the prefix
+    :return: bool
+    """
+
+    oc_prefix = id[:(id.index(':')+1)]
+
+    if oc_prefix == 'doi:':
+        vldt = doi.DOIManager()
+        return vldt.exists(id.removeprefix(oc_prefix))  # todo: use id.replace(oc_prefix, '', 1) for Python < v.3.9
+    if oc_prefix == 'isbn:':
+        vldt = isbn.ISBNManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'issn:':
+        vldt = issn.ISSNManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'orcid:':
+        vldt = orcid.ORCIDManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'pmcid:':
+        vldt = pmcid.PMCIDManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'pmid:':
+        vldt = pmid.PMIDManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'ror:':
+        vldt = ror.RORManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'url:':
+        vldt = url.URLManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'viaf:':
+        vldt = viaf.ViafManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'wikidata:':
+        vldt = wikidata.WikidataManager()
+        return vldt.exists(id.removeprefix(oc_prefix))
+    if oc_prefix == 'wikipedia:':
+        vldt = wikipedia.WikipediaManager()
+        return vldt.exists(id.removeprefix(oc_prefix))

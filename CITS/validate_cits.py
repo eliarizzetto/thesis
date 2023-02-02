@@ -1,7 +1,7 @@
 # This file contains the base structure wherein to call the validation functions for CITS-CSV.
 
 from helper_functions import content, group_ids, check_fieldnames_cits
-from validation_functions import wellformedness_id_field, wellformedness_br_id, wellformedness_date
+from validation_functions import *
 from create_report import create_error_dict
 # from check_output.check_validation_output import check_validation_output
 import re
@@ -78,6 +78,15 @@ def validate_cits(csv_doc: str) -> list:
                                                           message=message, error_label='duplicate_id', located_in='item',
                                                           table=table)  # 'valid'=False
                                     )
+                                #  2nd validation level: EXTERNAL SYNTAX
+                                if not check_id_syntax(item):
+                                    message = messages['m19']
+                                    table = {row_idx: {field: [item_idx]}}
+                                    error_final_report.append(
+                                        create_error_dict(validation_level='external_syntax', error_type='error',
+                                                          message=message, error_label='br_id_syntax',
+                                                          located_in='item',
+                                                          table=table))
 
                         if len(ids_set) >= 1:
                             id_fields_instances.append(ids_set)

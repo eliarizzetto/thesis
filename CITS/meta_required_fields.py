@@ -15,6 +15,9 @@ def missing_values(row:dict) -> dict:
     #                'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
     #                'reference entry', 'report', 'report series', 'standard', 'standard series']
 
+    # TODO: Consider using an external config file, as you do for checking id-type semantic alignment, since the list
+    #  of accepted types might change/be extended frequently!
+
     missing = {}
     if not content(row['id']):  # ID value is missing
 
