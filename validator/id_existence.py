@@ -1,5 +1,5 @@
 # TODO: CHANGE IMPORTS FROM CORRECT/UPDATED LOCATION!
-from CITS.oc_idmanager import doi, isbn, issn, orcid, pmcid, pmid, ror, url, viaf, wikidata, wikipedia
+from oc_idmanager import doi, isbn, issn, orcid, pmcid, pmid, ror, url, viaf, wikidata, wikipedia
 
 
 class IdExistence:

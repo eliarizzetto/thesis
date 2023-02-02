@@ -1,22 +1,29 @@
+import os.path
 from csv import DictReader
 import yaml
-from json import load
+from json import load, dump
+from os.path import exists, join
+from os import makedirs
 import re
 from helper import Helper
 from csv_wellformedness import Wellformedness
 from id_syntax import IdSyntax
 from id_existence import IdExistence
+import argparse
 
 class Validator:
-    def __init__(self, csv_doc):
+    def __init__(self, csv_doc, output_dir):
         self.data = self.read_csv(csv_doc)
         self.table_to_process = self.process_selector(self.data)
         self.helper = Helper()
         self.wellformed = Wellformedness()
         self.syntax = IdSyntax()
         self.existence = IdExistence()
-        self.messages = yaml.full_load(open('messages.yaml', 'r', encoding='utf-8'))
-        self.id_type_dict = load(open('id_type_alignment.json', 'r', encoding='utf-8'))  # for ID-type alignment (semantics)
+        self.messages = yaml.full_load(open('validator/messages.yaml', 'r', encoding='utf-8'))
+        self.id_type_dict = load(open('validator/id_type_alignment.json', 'r', encoding='utf-8'))  # for ID-type alignment (semantics)
+        self.output_dir = output_dir
+        if not exists(self.output_dir):
+            makedirs(self.output_dir)
 
     def read_csv(self, csv_doc):
         with open(csv_doc, 'r', encoding='utf-8') as f:
@@ -361,6 +368,9 @@ class Validator:
         if duplicate_report:
             error_final_report.extend(duplicate_report)
 
+        with open(join(self.output_dir,'out_validate_meta.json'), 'w', encoding='utf-8') as f:
+            dump(error_final_report, f)
+
         return error_final_report
 
     def validate_cits(self) -> list:
@@ -372,7 +382,7 @@ class Validator:
 
         error_final_report = []
 
-        messages = yaml.full_load(open('../CITS/messages.yaml', 'r', encoding='utf-8'))
+        messages = yaml.full_load(open('validator/messages.yaml', 'r', encoding='utf-8'))
 
         id_fields_instances = []
 
@@ -467,5 +477,19 @@ class Validator:
         if duplicate_report:
             error_final_report.extend(duplicate_report)
 
+        with open(join(self.output_dir,'out_validate_cits.json'), 'w', encoding='utf-8') as f:
+            dump(error_final_report, f)
+
         return error_final_report
 
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', dest='input_csv', required=True, help='The path to the CSV document to validate.', type=str)
+    parser.add_argument('-o', '--output', dest='output_dir', required=True, help='The path to the directory where to store the output json files.', type=str)
+    args = parser.parse_args()
+    v = Validator(args.input_csv, args.output_dir)
+    v.validate()
+
+
+#  python validator/main.py -i C:\Users\media\Desktop\thesis23\thesis_resources\validation_process\validation\test_files\cits_example.csv -o validation_output
