@@ -26,12 +26,12 @@ from requests.exceptions import ConnectionError
 from oc_idmanager.base import IdentifierManager
 
 
-class ViafManager(IdentifierManager):
+class VIAFManager(IdentifierManager):
     """This class implements an identifier manager for VIAF identifier"""
 
     def __init__(self, data={}, use_api_service=True):
         """VIAF manager constructor."""
-        super(ViafManager, self).__init__()
+        super(VIAFManager, self).__init__()
         self._api = "http://www.viaf.org/viaf/"
         self._use_api_service = use_api_service
         self._p = "viaf:"

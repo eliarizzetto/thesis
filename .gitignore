@@ -1,0 +1,7 @@
+uml/
+validator_uml_diagram.puml
+oc_idmanager_uml_diagram.puml
+myenv
+prove_summary.py
+evaluation.py
+validator/tmp_tests.py

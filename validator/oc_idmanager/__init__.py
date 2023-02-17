@@ -24,6 +24,6 @@ from oc_idmanager.pmid import PMIDManager
 from oc_idmanager.wikidata import WikidataManager
 from oc_idmanager.wikipedia import WikipediaManager
 from oc_idmanager.url import URLManager
-from oc_idmanager.viaf import ViafManager
+from oc_idmanager.viaf import VIAFManager
 from oc_idmanager.ror import RORManager
 from oc_idmanager.pmcid import PMCIDManager

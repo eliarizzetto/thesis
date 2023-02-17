@@ -9,9 +9,9 @@ class IdSyntax:
 
     def check_id_syntax(self, id: str):
         """
-        Checks the specific external syntax of each identifier schema, calling the .syntax_ok() method from every IdManager
-        module.
-        :param id: the identifier (with or without its prefix)
+        Checks the specific external syntax of each identifier schema, calling the syntax_ok() method from every
+        IdManager class.
+        :param id: the identifier (with its prefix)
         :return: bool
         """
         oc_prefix = id[:(id.index(':') + 1)]
@@ -41,7 +41,7 @@ class IdSyntax:
             vldt = url.URLManager()
             return vldt.syntax_ok(id)
         if oc_prefix == 'viaf:':
-            vldt = viaf.ViafManager()
+            vldt = viaf.VIAFManager()
             return vldt.syntax_ok(id)
         if oc_prefix == 'wikidata:':
             vldt = wikidata.WikidataManager()

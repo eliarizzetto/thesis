@@ -17,35 +17,35 @@ class IdExistence:
         oc_prefix = id[:(id.index(':')+1)]
 
         if oc_prefix == 'doi:':
-            vldt = doi.DOIManager()
-            return vldt.exists(id.removeprefix(oc_prefix))  # todo: use id.replace(oc_prefix, '', 1) for Python < v.3.9
+            vldt = doi.DOIManager() # you can use removeprefix(oc_prefix) from Python 3.9+
+            return vldt.exists(id.replace(oc_prefix, '', 1))  # todo: use id.replace(oc_prefix, '', 1) for Python < v.3.9
         if oc_prefix == 'isbn:':
             vldt = isbn.ISBNManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'issn:':
             vldt = issn.ISSNManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'orcid:':
             vldt = orcid.ORCIDManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'pmcid:':
             vldt = pmcid.PMCIDManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'pmid:':
             vldt = pmid.PMIDManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'ror:':
             vldt = ror.RORManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'url:':
             vldt = url.URLManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'viaf:':
-            vldt = viaf.ViafManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            vldt = viaf.VIAFManager()
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'wikidata:':
             vldt = wikidata.WikidataManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'wikipedia:':
             vldt = wikipedia.WikipediaManager()
-            return vldt.exists(id.removeprefix(oc_prefix))
+            return vldt.exists(id.replace(oc_prefix, '', 1))

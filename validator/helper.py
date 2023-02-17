@@ -1,17 +1,6 @@
-
 class Helper:
     def __init__(self):  # todo: è necessario mettere init?
         self.descr = 'contains helper functions'
-
-    def content(self, value):
-        """
-        Checks whether the value of a given field contains data, i.e. is not an empty string.
-        :param value: the value for any field key
-        (e.g. the string value for the field "id").
-        :return: False if the value is an empty string, True otherwise
-        """
-        # does not consider None values, given that csv.DictReader automatically converts them into empty strings
-        return False if value == '' else True
 
     def group_ids(self, id_groups: list):
         """
@@ -65,128 +54,18 @@ class Helper:
 
         return result
 
-    def missing_values(self, row: dict) -> dict:
+    def create_validation_summary(self, error_report):
         """
-        Checks whether a row has all required fields, depending on the specified 'type' of the resource, in case the value
-        of 'id' is not specified.
-        :param row:
+        Creates a natural language summary of the validation error report.
+        :param error_report:
         :return:
         """
-        # valid_types = ['book', 'book chapter', 'book part', 'book section', 'book series', 'book set', 'book track',
-        #                'component', 'dataset', 'data file', 'dissertation', 'edited book', 'journal', 'journal article',
-        #                'journal issue', 'journal volume', 'monograph', 'other', 'peer review', 'posted content',
-        #                'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
-        #                'reference entry', 'report', 'report series', 'standard', 'standard series']
-
-        # TODO: Consider using an external config file, as you do for checking id-type semantic alignment, since the list
-        #  of accepted types might change/be extended frequently!
-
-        missing = {}
-        if not self.content(row['id']):  # ID value is missing
-
-            if self.content(row['type']):  # ID is missing and 'type' is specified
-
-                if row['type'] in ['book', 'dataset', 'data file', 'dissertation', 'edited book', 'journal',
-                                   'journal article', 'monograph', 'other', 'peer review', 'posted content',
-                                   'web content', 'proceedings article', 'reference book', 'report']:
-                    if not self.content(row['title']):
-                        missing['type'] = [0]
-                        missing['title'] = None
-                    if not self.content(row['pub_date']):
-                        missing['type'] = [0]
-                        missing['pub_date'] = None
-                    if not self.content(row['author']) and not self.content(row['editor']):
-                        missing['type'] = [0]
-                        if not self.content(row['author']):
-                            missing['author'] = None
-                        if not self.content(row['editor']):
-                            missing['editor'] = None
-
-                elif row['type'] in ['book chapter', 'book part', 'book section', 'book track', 'component',
-                                     'reference entry']:
-                    if not self.content(row['title']):
-                        missing['type'] = [0]
-                        missing['title'] = None
-                    if not self.content(row['venue']):
-                        missing['type'] = [0]
-                        missing['venue'] = None
-
-                elif row['type'] in ['book series', 'book set', 'journal', 'proceedings', 'proceedings series',
-                                     'report series', 'standard', 'standard series']:
-                    if not self.content(row['title']):
-                        missing['type'] = [0]
-                        missing['title'] = None
-
-                elif row['type'] == 'journal issue':
-                    if not self.content(row['venue']):
-                        missing['type'] = [0]
-                        missing['venue'] = None
-                    if not self.content(row['title']) and not self.content(row['issue']):
-                        missing['type'] = [0]
-                        if not self.content(row['title']):
-                            missing['title'] = None
-                        if not self.content(row['issue']):
-                            missing['issue'] = None
-
-                elif row['type'] == 'journal volume':
-                    if not self.content(row['venue']):
-                        missing['type'] = [0]
-                        missing['venue'] = None
-                    if not self.content(row['title']) and not self.content(row['volume']):
-                        missing['type'] = [0]
-                        if not self.content(row['title']):
-                            missing['title'] = None
-                        if not self.content(row['volume']):
-                            missing['volume'] = None
-
-            else:  # ID and type are both missing
-                # Se l'id non è specificato e manca anche il valore di 'type',
-                # allora tutti i seguenti field devono essere specificati:
-                # 'title', 'pub_date', 'author' OR 'editor'. Considera di escludere da questo if statement i casi
-                # in cui sono specificati 'volume' e/o 'issue'
-
-                if not self.content(row['title']):
-                    missing['type'] = None
-                    missing['title'] = None
-                if not self.content(row['pub_date']):
-                    missing['type'] = None
-                    missing['pub_date'] = None
-                if not self.content(row['author']) and not self.content(row['editor']):
-                    missing['type'] = None
-                    if not self.content(row['author']):
-                        missing['author'] = None
-                    if not self.content(row['editor']):
-                        missing['editor'] = None
-
-        # INDIPENDENTEMENTE (???? verifica con Arca!!) dal fatto che l'ID sia specificato o no, se 'volume' e/o 'issue' sono specificati,
-        # si applicano (possibilmente in aggiunta ad altri requirements già controllati):
-        #   1) il fatto che il 'type' deve essere presente e deve essere uno dei seguenti valori: 'journal article',
-        #           'journal volume', 'journal issue' (OCCHIO! il fatto che il type non sia il valore giusto
-        #           potrebbe diventare anche un altro tipo di errore/messaggio...)
-        #   2) il fatto che deve essere specificato anche 'venue'
-
-        if self.content(row[
-                       'id']):  # todo: se la presenza di 'id' è irrelevante, togli if statement e indenta indietro i primi 2 if blocks sottostanti!
-            if self.content(row['volume']):
-                if not self.content(row['venue']):
-                    missing['volume'] = [0]
-                    missing['venue'] = None
-                if row['type'] not in ['journal article', 'journal volume', 'journal issue']:
-                    missing['volume'] = [0]
-                    if not self.content(row['type']):
-                        missing['type'] = None
-                    else:
-                        missing['type'] = [0]
-
-            if self.content(row['issue']):
-                if not self.content(row['venue']):
-                    missing['issue'] = [0]
-                    missing['venue'] = None
-                if row['type'] not in ['journal article', 'journal volume', 'journal issue']:
-                    missing['issue'] = [0]
-                    if not self.content(row['type']):
-                        missing['type'] = None
-                    else:
-                        missing['type'] = [0]
-
-        return missing
+        #  TODO: either call this inside validate_cits and validate_meta or use it separately.
+        #   If used inside validate_meta/validate_cits, it must be called before returning error dict,
+        #   it must take in input the list final_error_report, and just write the summary on an external
+        #   txt file (returning None)
+        #   If used separately it must take in input the JSON file of final_error_report and must return
+        #   the summary as a string (as well as saving the output on a file).
+        #   Consider the possibility of combining both possibilities, i.e. being called separately and inside
+        #   the two main methods of Validator. Think about argparser!
+        return ''

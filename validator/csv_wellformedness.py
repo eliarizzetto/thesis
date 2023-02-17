@@ -1,4 +1,4 @@
-from re import match, search, sub, split
+from re import match, search, sub
 from roman import fromRoman, InvalidRomanNumeralError
 from helper import Helper
 
@@ -8,18 +8,18 @@ class Wellformedness:
         self.descr = 'This class groups the function for validating the well-formedness of the document.'  # todo: remove descr?
         self.helper = Helper()
 
-    def wellformedness_id_field(self, id_field):
-        """
-        Validates the well-formedness of the 'citing_id', 'cited_id' or 'id' field of a row (taken as a whole), checking its
-        compliance with CITS-csv/META-CSV syntax.
-        :param id_field: str, the whole string value of 'citing_id', 'cited_id' or 'id'
-        :return: bool
-        """
-        id_field_pattern = r'^\S+( \S+)*$'  # no multiple adjacent spaces, no spaces at the beginning or end of the string!
-        if match(id_field_pattern, id_field):
-            return True
-        else:
-            return False
+    # def wellformedness_id_field(self, id_field):
+    #     """
+    #     Validates the well-formedness of the 'citing_id', 'cited_id' or 'id' field of a row (taken as a whole), checking its
+    #     compliance with CITS-csv/META-CSV syntax.
+    #     :param id_field: str, the whole string value of 'citing_id', 'cited_id' or 'id'
+    #     :return: bool
+    #     """
+    #     id_field_pattern = r'^\S+(\s\S+)*$'  # no multiple adjacent spaces, no spaces at the beginning or end of the string!
+    #     if match(id_field_pattern, id_field):
+    #         return True
+    #     else:
+    #         return False
 
     def wellformedness_br_id(self, id_element):
         """
@@ -41,7 +41,7 @@ class Wellformedness:
         :param ra_item: str
         :return: bool
         """
-        # todo: create stricter regex for not allowing characters that are likely to be illegal in a person's name/surname
+        #  todo: create stricter regex for not allowing characters that are likely to be illegal in a person's name/surname
         #   (e.g. digits, apostrophe, underscore, full-stop, etc.)
         outside_brackets = r'(?:[^\s,;\[\]]+(?:\s[^\s,;\[\]]+)*),?(?:\s[^\s,;\[\]]+)*'
         inside_brackets = r'\[(crossref|orcid|viaf|wikidata|ror):\S+(?:\s(crossref|orcid|viaf|wikidata|ror):\S+)*\]'
@@ -103,8 +103,8 @@ class Wellformedness:
         :return: bool
         """
         outside_brackets_venue = r'(?:[^\s\[\]]+(?:\s[^\s\[\]]+)*)'
-        # pmid and pmcid are not valid identifiers for 'venues'!
-        inside_brackets_venue = r'\[(doi|issn|isbn|url|wikidata|wikipedia):\S+(?:\s(doi|issn|isbn|url|wikidata|wikipedia):\S+)*\]'
+        # pmcids are not valid identifiers for 'venues'!
+        inside_brackets_venue = r'\[(doi|pmid|issn|isbn|url|wikidata|wikipedia):\S+(?:\s(doi|pmid|issn|isbn|url|wikidata|wikipedia):\S+)*\]'
         venue_pattern = f'^(?:({outside_brackets_venue}\\s{inside_brackets_venue})|({outside_brackets_venue})|({inside_brackets_venue}))$'
 
         if match(venue_pattern, venue_value):
@@ -120,7 +120,7 @@ class Wellformedness:
         :return:
         bool, True if a match is found (the string is likely NOT well-formed), False if NO match is found.
         """
-        if search(r'(doi|issn|isbn|url|wikidata|wikipedia):', sub(r'\[.*\]', '', venue_value)):
+        if search(r'(doi|pmid|issn|isbn|url|wikidata|wikipedia):', sub(r'\[.*\]', '', venue_value)):
             return True
         else:
             return False
@@ -203,6 +203,134 @@ class Wellformedness:
         else:
             return False
 
+    def get_missing_values(self, row: dict) -> dict:
+        """
+        Checks whether a row has all required fields, depending on the specified 'type' of the resource, in case the
+        value of 'id' is not specified. If any required field value is missing, a dictionary for the row is created
+        which includes both the field(s) conditioning the requirement and the field(s) that are missing: The field
+        on which the requirement depends appear in the dictionary as <field name>:[0], while missing values appear as
+        <field name>:None.
+        :param row: (dict) a dict corresponding to a single row
+        :return missing: (dict) the dictionary locating
+        """
+        # valid_types = ['book', 'book chapter', 'book part', 'book section', 'book series', 'book set', 'book track',
+        #                'component', 'dataset', 'data file', 'dissertation', 'edited book', 'journal', 'journal article',
+        #                'journal issue', 'journal volume', 'monograph', 'other', 'peer review', 'posted content',
+        #                'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
+        #                'reference entry', 'report', 'report series', 'standard', 'standard series']
+
+        # TODO: Consider using an external config file, as you do for checking id-type semantic alignment, since the list
+        #  of accepted types might change/be extended frequently!
+
+        missing = {}
+        if not row['id']:  # ID value is missing
+
+            if row['type']:  # ID is missing and 'type' is specified
+
+                if row['type'] in ['book', 'dataset', 'data file', 'dissertation', 'edited book', 'journal',
+                                   'journal article', 'monograph', 'other', 'peer review', 'posted content',
+                                   'web content', 'proceedings article', 'reference book', 'report']:
+                    if not row['title']:
+                        missing['type'] = [0]
+                        missing['title'] = None
+                    if not row['pub_date']:
+                        missing['type'] = [0]
+                        missing['pub_date'] = None
+                    if not row['author'] and not row['editor']:
+                        missing['type'] = [0]
+                        if not row['author']:
+                            missing['author'] = None
+                        if not row['editor']:
+                            missing['editor'] = None
+
+                elif row['type'] in ['book chapter', 'book part', 'book section', 'book track', 'component',
+                                     'reference entry']:
+                    if not row['title']:
+                        missing['type'] = [0]
+                        missing['title'] = None
+                    if not row['venue']:
+                        missing['type'] = [0]
+                        missing['venue'] = None
+
+                elif row['type'] in ['book series', 'book set', 'journal', 'proceedings', 'proceedings series',
+                                     'report series', 'standard', 'standard series']:
+                    if not row['title']:
+                        missing['type'] = [0]
+                        missing['title'] = None
+
+                elif row['type'] == 'journal issue':
+                    if not row['venue']:
+                        missing['type'] = [0]
+                        missing['venue'] = None
+                    if not row['title'] and not row['issue']:
+                        missing['type'] = [0]
+                        if not row['title']:
+                            missing['title'] = None
+                        if not row['issue']:
+                            missing['issue'] = None
+
+                elif row['type'] == 'journal volume':
+                    if not row['venue']:
+                        missing['type'] = [0]
+                        missing['venue'] = None
+                    if not row['title'] and not row['volume']:
+                        missing['type'] = [0]
+                        if not row['title']:
+                            missing['title'] = None
+                        if not row['volume']:
+                            missing['volume'] = None
+
+            else:  # ID and type are both missing
+                # Se l'id non è specificato e manca anche il valore di 'type',
+                # allora tutti i seguenti field devono essere specificati:
+                # 'title', 'pub_date', 'author' OR 'editor'. Considera di escludere da questo if statement i casi
+                # in cui sono specificati 'volume' e/o 'issue'
+
+                if not row['title']:
+                    missing['type'] = None
+                    missing['title'] = None
+                if not row['pub_date']:
+                    missing['type'] = None
+                    missing['pub_date'] = None
+                if not row['author'] and not row['editor']:
+                    missing['type'] = None
+                    if not row['author']:
+                        missing['author'] = None
+                    if not row['editor']:
+                        missing['editor'] = None
+
+        # INDIPENDENTEMENTE (???? verifica con Arca!!) dal fatto che l'ID sia specificato o no, se 'volume' e/o 'issue' sono specificati,
+        # si applicano (possibilmente in aggiunta ad altri requirements già controllati):
+        #   1) il fatto che il 'type' deve essere presente e deve essere uno dei seguenti valori: 'journal article',
+        #           'journal volume', 'journal issue' (OCCHIO! il fatto che il type non sia il valore giusto
+        #           potrebbe diventare anche un altro tipo di errore/messaggio...)
+        #   2) il fatto che deve essere specificato anche 'venue'
+
+        if row['id']:  # todo: se la presenza di 'id' è irrelevante, togli if statement e indenta indietro i primi 2 if blocks sottostanti!
+            if row['volume']:
+                if not row['venue']:
+                    missing['volume'] = [0]
+                    missing['venue'] = None
+                if row['type'] not in ['journal article', 'journal volume', 'journal issue']:
+                    missing['volume'] = [0]
+                    if not row['type']:
+                        missing['type'] = None
+                    else:
+                        missing['type'] = [0]
+
+            if row['issue']:
+                if not row['venue']:
+                    missing['issue'] = [0]
+                    missing['venue'] = None
+                if row['type'] not in ['journal article', 'journal volume', 'journal issue']:
+                    missing['issue'] = [0]
+                    if not row['type']:
+                        missing['type'] = None
+                    else:
+                        missing['type'] = [0]
+
+        return missing
+
     def get_duplicates_cits(self, entities: list, data_dict: list, messages) -> list:
         """
         Creates a list of dictionaries containing the duplication error in the whole document, either within a row
@@ -217,7 +345,7 @@ class Wellformedness:
         for row_idx, row in enumerate(data_dict):
             citation = {'citing_id': '', 'cited_id': ''}
 
-            citing_items = split(r'\s', row['citing_id'])
+            citing_items = row['citing_id'].split(' ')
             for item in citing_items:
                 if citation['citing_id'] == '':
                     for set_idx, set in enumerate(entities):
@@ -225,7 +353,7 @@ class Wellformedness:
                             citation['citing_id'] = set_idx
                             break
 
-            cited_items = split(r'\s', row['cited_id'])
+            cited_items = row['cited_id'].split(' ')
             for item in cited_items:
                 if citation['cited_id'] == '':
                     for set_idx, set in enumerate(entities):
@@ -298,7 +426,7 @@ class Wellformedness:
         report = []
         for row_idx, row in enumerate(data_dict):
             br = {'meta_id': None, 'table': {}}
-            items = split(r'\s', row['id'])
+            items = row['id'].split(' ')
 
             for item in items:
                 if not br['meta_id']:
