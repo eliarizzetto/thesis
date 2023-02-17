@@ -1,5 +1,7 @@
 import unittest
-from validator.topino import Validator
+# from validator.topino import Validator
+from validator.main import Validator
+from os import getcwd
 
 
 class ValidateCase(unittest.TestCase):

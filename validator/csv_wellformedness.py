@@ -1,6 +1,6 @@
 from re import match, search, sub
 from roman import fromRoman, InvalidRomanNumeralError
-from helper import Helper
+from validator.helper import Helper
 
 
 class Wellformedness:

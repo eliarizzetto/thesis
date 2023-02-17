@@ -2,13 +2,13 @@ from csv import DictReader
 from yaml import full_load
 from json import load, dump
 from os.path import exists, join, dirname
-from os import makedirs
+from os import makedirs, getcwd
 from re import finditer
-from helper import Helper
-from csv_wellformedness import Wellformedness
-from id_syntax import IdSyntax
-from id_existence import IdExistence
-from semantics import Semantics
+from validator.helper import Helper
+from validator.csv_wellformedness import Wellformedness
+from validator.id_syntax import IdSyntax
+from validator.id_existence import IdExistence
+from validator.semantics import Semantics
 from argparse import ArgumentParser
 
 
@@ -54,9 +54,9 @@ class Validator:
 
     def validate(self):
         if self.table_to_process == 'meta_csv':
-            self.validate_meta()
+            return self.validate_meta()
         elif self.table_to_process == 'cits_csv':
-            self.validate_cits()
+            return self.validate_cits()
         else:
             return "The input table is not processable, since it does not comply with neither META-CSV nor CITS-CSV basic structure"
 
@@ -588,6 +588,7 @@ class Validator:
             f.write(textual_report)
 
         return error_final_report
+
 
 
 if __name__ == '__main__':

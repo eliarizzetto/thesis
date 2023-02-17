@@ -68,4 +68,4 @@ class Helper:
         #   the summary as a string (as well as saving the output on a file).
         #   Consider the possibility of combining both possibilities, i.e. being called separately and inside
         #   the two main methods of Validator. Think about argparser!
-        return ''
+        return 'proviamo così'
