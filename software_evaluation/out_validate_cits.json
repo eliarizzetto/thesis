@@ -1,0 +1,1 @@
+[{"validation_level": "existence", "error_type": "warning", "error_label": "br_id_existence", "valid": true, "message": "SCRIVI MESSAGGIO PER MANCATA ESISTENZA DI UN IDENTIFICATIVO DI RISORSA BIBLIOGRAFICA (NON RISULTA REGISTRATO NELL'API)\n", "position": {"located_in": "item", "table": {"11": {"cited_id": [0]}}}}]

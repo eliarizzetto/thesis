@@ -216,7 +216,7 @@ class Validator:
 
                                 for id in ids:
                                     #  2nd validation level: EXTERNAL SYNTAX OF ID (RESPONSIBLE AGENT)
-                                    if not self.syntax.check_id_syntax(item):
+                                    if not self.syntax.check_id_syntax(id):
                                         message = messages['m21']
                                         table = {row_idx: {field: [item_idx]}}
                                         error_final_report.append(
@@ -227,7 +227,7 @@ class Validator:
                                                                           located_in='item',
                                                                           table=table))
                                     #  3rd validation level: EXISTENCE OF ID (RESPONSIBLE AGENT)
-                                    elif not self.existence.check_id_existence(item):
+                                    elif not self.existence.check_id_existence(id):
                                         message = messages['m22']
                                         table = {row_idx: {field: [item_idx]}}
                                         error_final_report.append(
@@ -590,7 +590,6 @@ class Validator:
         return error_final_report
 
 
-
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-i', '--input', dest='input_csv', required=True,
@@ -599,7 +598,18 @@ if __name__ == '__main__':
                         help='The path to the directory where to store the output JSON file.', type=str)
     args = parser.parse_args()
     v = Validator(args.input_csv, args.output_dir)
-    # v = Validator("C:\Users\media\Desktop\thesis23\thesis_resources\validation_process\validation\test_files\cits_example.csv", "validation_output")
     v.validate()
 
+# to instantiate the class, write:
+# v = Validator('path/to/csv/file', 'output/dir/path')
+# v.validate() --> validates, returns the output, and saves files
+
+
+# FROM THE COMMAND LINE:
+# python -m validator.main -i <input csv file path> -o <output dir path>
+# E.G:
+# python -m validator.main -i C:\Users\media\Desktop\thesis23\thesis_resources\validation_process\validation\test_files\cits_example.csv -o validation_output
+
+# N.B.: this does not work anymore: python validator/main.py -i <input file> -o <output dir>
 #  python validator/main.py -i C:\Users\media\Desktop\thesis23\thesis_resources\validation_process\validation\test_files\cits_example.csv -o validation_output
+# see https://stackoverflow.com/questions/50745094/modulenotfounderror-when-running-script-from-terminal

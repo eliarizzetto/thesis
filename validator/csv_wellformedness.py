@@ -45,7 +45,7 @@ class Wellformedness:
         #   (e.g. digits, apostrophe, underscore, full-stop, etc.)
         outside_brackets = r'(?:[^\s,;\[\]]+(?:\s[^\s,;\[\]]+)*),?(?:\s[^\s,;\[\]]+)*'
         inside_brackets = r'\[(crossref|orcid|viaf|wikidata|ror):\S+(?:\s(crossref|orcid|viaf|wikidata|ror):\S+)*\]'
-        ra_item_pattern = f'^(?:({outside_brackets}\\s{inside_brackets})|({outside_brackets})|({inside_brackets}))$'
+        ra_item_pattern = f'^(?:({outside_brackets}\\s{inside_brackets})|({outside_brackets}\\s?)|({inside_brackets}))$'
 
         if match(ra_item_pattern, ra_item):
             return True

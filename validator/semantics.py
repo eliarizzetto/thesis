@@ -16,9 +16,11 @@ class Semantics:
         row_ids = row['id'].split(' ')  # list
         invalid_ids_idxs = []
 
-        for id_idx, id in enumerate(row_ids):
-            if id[:id.index(':')] not in alignment[row_type]:
-                invalid_ids_idxs.append(id_idx)
+        if row['type'] and row['id']: # apply semantic checks only if both 'id' and 'type' are not empty
+            for id_idx, id in enumerate(row_ids):
+                if id[:id.index(':')] not in alignment[row_type]:
+                    invalid_ids_idxs.append(id_idx)
+
         if invalid_ids_idxs:
             invalid_row['id'] = invalid_ids_idxs
             invalid_row['type'] = [0]
