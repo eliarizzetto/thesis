@@ -1,0 +1,10 @@
+THE TABLE IS: test_files/invalid_cits.csv
+
+File size: 1174 bytes
+Minimum execution time: 5.448786699999999 seconds
+Maximum execution time: 7.308082400000018 seconds
+Median execution time: 6.307667549999991 seconds
+Mean execution time: 6.261292599999999 seconds
+Standard deviation of execution time: 0.5943629764026316 seconds
+
+Processor Current Speed: 1792.0)

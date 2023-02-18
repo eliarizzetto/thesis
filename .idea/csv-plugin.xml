@@ -3,10 +3,24 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="C:\Users\media\Desktop\thesis23\meta_input\0.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\errors_map.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\evaluation_results\invalid_cits.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
             </Attribute>
           </value>
         </entry>
@@ -25,6 +39,20 @@
           </value>
         </entry>
         <entry key="\test_files\invalid_meta.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test_files\meta_table_no_ids.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test_files\meta_table_with_ids.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

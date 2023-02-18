@@ -41,7 +41,7 @@ class IdSyntax:
             vldt = url.URLManager()
             return vldt.syntax_ok(id)
         if oc_prefix == 'viaf:':
-            vldt = viaf.VIAFManager()
+            vldt = viaf.ViafManager()
             return vldt.syntax_ok(id)
         if oc_prefix == 'wikidata:':
             vldt = wikidata.WikidataManager()

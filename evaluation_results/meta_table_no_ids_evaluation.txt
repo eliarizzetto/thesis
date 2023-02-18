@@ -1,0 +1,10 @@
+THE TABLE IS: test_files/meta_table_no_ids.csv
+
+File size: 111471 bytes
+Minimum execution time: 53.525581599999896 seconds
+Maximum execution time: 87.9281833 seconds
+Median execution time: 57.910469900000066 seconds
+Mean execution time: 63.82577093000002 seconds
+Standard deviation of execution time: 12.184510526002258 seconds
+
+Processor Current Speed: 1792.0

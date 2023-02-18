@@ -1,0 +1,10 @@
+THE TABLE IS: test_files/invalid_meta.csv
+
+File size: 4255 bytes
+Minimum execution time: 7.123238200000003 seconds
+Maximum execution time: 8.995296200000041 seconds
+Median execution time: 8.280661350000017 seconds
+Mean execution time: 8.209030450000009 seconds
+Standard deviation of execution time: 0.5476955478372726 seconds
+
+Processor Current Speed: 1792.0)

@@ -41,7 +41,7 @@ class IdExistence:
             vldt = url.URLManager()
             return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'viaf:':
-            vldt = viaf.VIAFManager()
+            vldt = viaf.ViafManager()
             return vldt.exists(id.replace(oc_prefix, '', 1))
         if oc_prefix == 'wikidata:':
             vldt = wikidata.WikidataManager()
