@@ -126,7 +126,7 @@ class Validator:
                                 if item not in br_ids_set:
                                     br_ids_set.add(item)
                                 else:  # in-field duplication of the same ID
-                                    table = {row: {field: [i for i, v in enumerate(items) if v == item]}}
+                                    table = {row_idx: {field: [i for i, v in enumerate(items) if v == item]}}
                                     message = messages['m6']
 
                                     error_final_report.append(
@@ -518,7 +518,8 @@ class Validator:
                                 if item not in ids_set:
                                     ids_set.add(item)
                                 else:  # in-field duplication of the same ID
-                                    table = {row: {field: [i for i, v in enumerate(items) if v == item]}}
+
+                                    table = {row_idx: {field: [i for i, v in enumerate(items) if v == item]}}
                                     message = messages['m6']
 
                                     error_final_report.append(

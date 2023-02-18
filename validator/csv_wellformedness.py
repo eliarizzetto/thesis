@@ -61,7 +61,7 @@ class Wellformedness:
         """
         outside_brackets_pub = r'(?:[^\s\[\]]+(?:\s[^\s\[\]]+)*)'
         inside_brackets = r'\[(crossref|orcid|viaf|wikidata|ror):\S+(?:\s(crossref|orcid|viaf|wikidata|ror):\S+)*\]'
-        ra_item_pattern = f'^(?:({outside_brackets_pub}\\s{inside_brackets})|({outside_brackets_pub})|({inside_brackets}))$'
+        ra_item_pattern = f'^(?:({outside_brackets_pub}\\s{inside_brackets})|({outside_brackets_pub}\\s?)|({inside_brackets}))$'
 
         if match(ra_item_pattern, ra_item):
             return True
@@ -105,7 +105,7 @@ class Wellformedness:
         outside_brackets_venue = r'(?:[^\s\[\]]+(?:\s[^\s\[\]]+)*)'
         # pmcids are not valid identifiers for 'venues'!
         inside_brackets_venue = r'\[(doi|pmid|issn|isbn|url|wikidata|wikipedia):\S+(?:\s(doi|pmid|issn|isbn|url|wikidata|wikipedia):\S+)*\]'
-        venue_pattern = f'^(?:({outside_brackets_venue}\\s{inside_brackets_venue})|({outside_brackets_venue})|({inside_brackets_venue}))$'
+        venue_pattern = f'^(?:({outside_brackets_venue}\\s{inside_brackets_venue})|({outside_brackets_venue}\\s?)|({inside_brackets_venue}))$'
 
         if match(venue_pattern, venue_value):
             return True
