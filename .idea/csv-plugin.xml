@@ -17,13 +17,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\evaluation_results\invalid_cits.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value=":" />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\id_types_alignment.csv">
           <value>
             <Attribute>

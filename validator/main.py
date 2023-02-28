@@ -456,7 +456,7 @@ class Validator:
 
         # write human-readable validation summary to txt file
         textual_report = self.helper.create_validation_summary(error_final_report)
-        with open(join(self.output_dir, "cits_validation_summary.txt"), "w", encoding='utf-8') as f:
+        with open(join(self.output_dir, "meta_validation_summary.txt"), "w", encoding='utf-8') as f:
             f.write(textual_report)
 
         return error_final_report

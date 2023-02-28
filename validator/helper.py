@@ -68,4 +68,52 @@ class Helper:
         #   the summary as a string (as well as saving the output on a file).
         #   Consider the possibility of combining both possibilities, i.e. being called separately and inside
         #   the two main methods of Validator. Think about argparser!
-        return 'proviamo così'
+
+        # Count the number of instances of each error label
+        error_counts = {}
+        for error in error_report:
+            label = error['error_label']
+            error_counts[label] = error_counts.get(label, 0) + 1
+
+        label_report = []
+        for label, count in error_counts.items():
+            errors_with_label = [e for e in error_report if e['error_label'] == label]
+            explanation = errors_with_label[0]['message']  # all errors w/ a given label have the same message
+            instance_details = []
+            count_summary = f"There are {count} {label} issues in the document." if count > 1 else f"There is {count} {label} issue in the document. "
+            for err_idx, error in enumerate(errors_with_label):
+                tree = error['position']['table']
+                all_locs = []
+                for row_node_pos, row_node_value in tree.items():
+                    involved_row = row_node_pos
+                    for field_node_name, field_node_value in row_node_value.items():
+                        involved_field = field_node_name
+                        involved_items = field_node_value
+                        single_node_pos = f"row {involved_row}, field {involved_field}, and items in position {involved_items}"
+                        all_locs.append(single_node_pos)
+
+                if len(all_locs) > 1:
+                    location = f""
+                    pointer = 0
+                    while pointer < len(all_locs):
+                        location = location + all_locs[pointer] + "; "
+                        pointer += 1
+                    else:
+                        location = location[:-2]
+                else:
+                    location = f"{all_locs[0]}"
+
+                # Construct a detailed message for each error
+                if len(errors_with_label) > 1:
+                    detail = f"- {error['error_type']} {err_idx + 1} involves: {location}."
+                else:
+                    detail = f"- The {error['error_type']} involves: {location}."
+                instance_details.append(detail)
+
+            # Combine the summary and detailed messages for the current error label
+            error_label_summary = count_summary + "\n" + explanation + "\n".join(instance_details)
+            label_report.append(error_label_summary)
+
+        # Combine all the error messages into a single string
+        report = "\n\n".join(label_report)
+        return report
