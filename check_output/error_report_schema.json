@@ -65,17 +65,10 @@
                       "cited_publication_date"
                     ]
                   },
-                  "anyOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "integer"
-                      }
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
+                  "type": "array",
+                  "items": {
+                    "type": ["integer", null]
+                  }
                 },
                 "minProperties": 1
               }

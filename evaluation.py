@@ -17,7 +17,6 @@ meta_no_ids = 'test_files/meta_table_no_ids.csv'
 files_to_validate = [valid_cits, valid_meta, invalid_cits, invalid_meta]
 comparison_api = [meta_with_ids, meta_no_ids]
 eval_output_dir = 'evaluation_results'
-# evaluation_report = self.helper.create_validation_summary(error_final_report)
 
 
 for doc in comparison_api:
