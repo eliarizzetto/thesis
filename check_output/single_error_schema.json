@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "http://example.com/single_output_dictionary_schema.json",
+  "$id": "https://github.com/eliarizzetto/thesis_resources/check_output/single_error_schema.json",
   "type": "object",
   "properties": {
     "validation_level": {

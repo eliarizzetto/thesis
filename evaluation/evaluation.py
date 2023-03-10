@@ -7,16 +7,16 @@ import psutil
 from os.path import join
 
 
-valid_cits = 'test_files/valid_cits.csv'
-valid_meta = 'test_files/valid_meta.csv'
-invalid_cits = 'test_files/invalid_cits.csv'
-invalid_meta = 'test_files/invalid_meta.csv'
-meta_with_ids = 'test_files/meta_table_with_ids.csv'
-meta_no_ids = 'test_files/meta_table_no_ids.csv'
+valid_cits = 'evaluation/test_files/valid_cits.csv'
+valid_meta = 'evaluation/test_files/valid_meta.csv'
+invalid_cits = 'evaluation/test_files/invalid_cits.csv'
+invalid_meta = 'evaluation/test_files/invalid_meta.csv'
+meta_with_ids = 'evaluation/test_files/meta_table_with_ids.csv'
+meta_no_ids = 'evaluation/test_files/meta_table_no_ids.csv'
 
 files_to_validate = [valid_cits, valid_meta, invalid_cits, invalid_meta]
 comparison_api = [meta_with_ids, meta_no_ids]
-eval_output_dir = 'evaluation_results'
+eval_output_dir = 'evaluation/evaluation_results'
 
 
 for doc in comparison_api:
