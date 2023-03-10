@@ -1,3 +1,17 @@
+# Copyright (c) 2023, OpenCitations <contact@opencitations.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any purpose
+# with or without fee is hereby granted, provided that the above copyright notice
+# and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+# FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT,
+# OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+# DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+# ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+# SOFTWARE.
+
 from csv import DictReader
 from yaml import full_load
 from json import load, dump
@@ -608,9 +622,3 @@ if __name__ == '__main__':
 
 # FROM THE COMMAND LINE:
 # python -m validator.main -i <input csv file path> -o <output dir path>
-# E.G:
-# python -m validator.main -i C:\Users\media\Desktop\thesis23\thesis_resources\validation_process\validation\test_files\cits_example.csv -o validation_output
-
-# N.B.: this does not work anymore: python validator/main.py -i <input file> -o <output dir>
-#  python validator/main.py -i C:\Users\media\Desktop\thesis23\thesis_resources\validation_process\validation\test_files\cits_example.csv -o validation_output
-# see https://stackoverflow.com/questions/50745094/modulenotfounderror-when-running-script-from-terminal

@@ -1,3 +1,16 @@
+# Copyright (c) 2023, OpenCitations <contact@opencitations.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any purpose
+# with or without fee is hereby granted, provided that the above copyright notice
+# and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+# FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT,
+# OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+# DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+# ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+# SOFTWARE.
 class Helper:
     def __init__(self):  # todo: è necessario mettere init?
         self.descr = 'contains helper functions'
@@ -60,14 +73,6 @@ class Helper:
         :param error_report:
         :return:
         """
-        #  TODO: either call this inside validate_cits and validate_meta or use it separately.
-        #   If used inside validate_meta/validate_cits, it must be called before returning error dict,
-        #   it must take in input the list final_error_report, and just write the summary on an external
-        #   txt file (returning None)
-        #   If used separately it must take in input the JSON file of final_error_report and must return
-        #   the summary as a string (as well as saving the output on a file).
-        #   Consider the possibility of combining both possibilities, i.e. being called separately and inside
-        #   the two main methods of Validator. Think about argparser!
 
         # Count the number of instances of each error label
         error_counts = {}

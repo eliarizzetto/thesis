@@ -1,3 +1,17 @@
+# Copyright (c) 2023, OpenCitations <contact@opencitations.net>
+#
+# Permission to use, copy, modify, and/or distribute this software for any purpose
+# with or without fee is hereby granted, provided that the above copyright notice
+# and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+# FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT,
+# OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+# DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+# ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+# SOFTWARE.
+
 from re import match, search, sub
 from roman import fromRoman, InvalidRomanNumeralError
 from validator.helper import Helper
@@ -7,19 +21,6 @@ class Wellformedness:
     def __init__(self):
         self.descr = 'This class groups the function for validating the well-formedness of the document.'  # todo: remove descr?
         self.helper = Helper()
-
-    # def wellformedness_id_field(self, id_field):
-    #     """
-    #     Validates the well-formedness of the 'citing_id', 'cited_id' or 'id' field of a row (taken as a whole), checking its
-    #     compliance with CITS-csv/META-CSV syntax.
-    #     :param id_field: str, the whole string value of 'citing_id', 'cited_id' or 'id'
-    #     :return: bool
-    #     """
-    #     id_field_pattern = r'^\S+(\s\S+)*$'  # no multiple adjacent spaces, no spaces at the beginning or end of the string!
-    #     if match(id_field_pattern, id_field):
-    #         return True
-    #     else:
-    #         return False
 
     def wellformedness_br_id(self, id_element):
         """
@@ -213,11 +214,6 @@ class Wellformedness:
         :param row: (dict) a dict corresponding to a single row
         :return missing: (dict) the dictionary locating
         """
-        # valid_types = ['book', 'book chapter', 'book part', 'book section', 'book series', 'book set', 'book track',
-        #                'component', 'dataset', 'data file', 'dissertation', 'edited book', 'journal', 'journal article',
-        #                'journal issue', 'journal volume', 'monograph', 'other', 'peer review', 'posted content',
-        #                'web content', 'proceedings', 'proceedings article', 'proceedings series', 'reference book',
-        #                'reference entry', 'report', 'report series', 'standard', 'standard series']
 
         # TODO: Consider using an external config file, as you do for checking id-type semantic alignment, since the list
         #  of accepted types might change/be extended frequently!
@@ -280,11 +276,7 @@ class Wellformedness:
                         if not row['volume']:
                             missing['volume'] = None
 
-            else:  # ID and type are both missing
-                # Se l'id non è specificato e manca anche il valore di 'type',
-                # allora tutti i seguenti field devono essere specificati:
-                # 'title', 'pub_date', 'author' OR 'editor'. Considera di escludere da questo if statement i casi
-                # in cui sono specificati 'volume' e/o 'issue'
+            else:
 
                 if not row['title']:
                     missing['type'] = None
@@ -299,14 +291,7 @@ class Wellformedness:
                     if not row['editor']:
                         missing['editor'] = None
 
-        # INDIPENDENTEMENTE (???? verifica con Arca!!) dal fatto che l'ID sia specificato o no, se 'volume' e/o 'issue' sono specificati,
-        # si applicano (possibilmente in aggiunta ad altri requirements già controllati):
-        #   1) il fatto che il 'type' deve essere presente e deve essere uno dei seguenti valori: 'journal article',
-        #           'journal volume', 'journal issue' (OCCHIO! il fatto che il type non sia il valore giusto
-        #           potrebbe diventare anche un altro tipo di errore/messaggio...)
-        #   2) il fatto che deve essere specificato anche 'venue'
-
-        if row['id']:  # todo: se la presenza di 'id' è irrelevante, togli if statement e indenta indietro i primi 2 if blocks sottostanti!
+        if row['id']:
             if row['volume']:
                 if not row['venue']:
                     missing['volume'] = [0]
