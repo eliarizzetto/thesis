@@ -3,7 +3,13 @@
 # VSCode project setting
 .vscode/
 
+#plantUML diagram
 validator_uml_diagram.puml
+
+#virtual environment
 myenv
+
+#tests and output directories for development
 prove.py
 output
+validation_output
