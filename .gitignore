@@ -1,10 +1,8 @@
-uml/
+# PyCharm project setting
+.idea
+# VSCode project setting
+.vscode/
+
 validator_uml_diagram.puml
-oc_idmanager_uml_diagram.puml
 myenv
-prove_summary.py
-new_prove_summary.py
-create_summary.py
-validator/tmp_tests.py
-ciaoMAMMA
 prove.py
