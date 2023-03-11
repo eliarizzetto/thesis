@@ -6,6 +6,9 @@
 #plantUML diagram
 validator_uml_diagram.puml
 
+#build package
+dist
+
 #virtual environment
 myenv
 
@@ -14,3 +17,5 @@ prove.py
 output
 validation_output
 tmp
+
+
