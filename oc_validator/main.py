@@ -18,11 +18,11 @@ from json import load, dump
 from os.path import exists, join, dirname
 from os import makedirs, getcwd
 from re import finditer
-from validator.helper import Helper
-from validator.csv_wellformedness import Wellformedness
-from validator.id_syntax import IdSyntax
-from validator.id_existence import IdExistence
-from validator.semantics import Semantics
+from oc_validator.helper import Helper
+from oc_validator.csv_wellformedness import Wellformedness
+from oc_validator.id_syntax import IdSyntax
+from oc_validator.id_existence import IdExistence
+from oc_validator.semantics import Semantics
 from argparse import ArgumentParser
 
 
@@ -35,10 +35,10 @@ class Validator:
         self.syntax = IdSyntax()
         self.existence = IdExistence()
         self.semantics = Semantics()
-        self.messages = full_load(open('validator/messages.yaml', 'r', encoding='utf-8'))
+        self.messages = full_load(open('oc_validator/messages.yaml', 'r', encoding='utf-8'))
         # self.messages = full_load(open(join(dirname(__file__), 'messages.yaml'), 'r', encoding='utf-8'))
         self.id_type_dict = load(
-            open('validator/id_type_alignment.json', 'r', encoding='utf-8'))  # for ID-type alignment (semantics)
+            open('oc_validator/id_type_alignment.json', 'r', encoding='utf-8'))  # for ID-type alignment (semantics)
         self.output_dir = output_dir
         if not exists(self.output_dir):
             makedirs(self.output_dir)
@@ -483,7 +483,7 @@ class Validator:
 
         error_final_report = []
 
-        messages = full_load(open('validator/messages.yaml', 'r', encoding='utf-8'))
+        messages = full_load(open('oc_validator/messages.yaml', 'r', encoding='utf-8'))
 
         id_fields_instances = []
 
@@ -621,4 +621,4 @@ if __name__ == '__main__':
 
 
 # FROM THE COMMAND LINE:
-# python -m validator.main -i <input csv file path> -o <output dir path>
+# python -m oc_validator.main -i <input csv file path> -o <output dir path>

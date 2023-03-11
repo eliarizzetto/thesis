@@ -12,7 +12,7 @@
 # ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
 # SOFTWARE.
 
-from validator.main import Validator
+from oc_validator.main import Validator
 import time
 import statistics
 import os

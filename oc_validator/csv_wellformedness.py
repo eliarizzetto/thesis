@@ -14,7 +14,7 @@
 
 from re import match, search, sub
 from roman import fromRoman, InvalidRomanNumeralError
-from validator.helper import Helper
+from oc_validator.helper import Helper
 
 
 class Wellformedness:
