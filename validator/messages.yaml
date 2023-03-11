@@ -19,66 +19,85 @@ m3: >
   are optional. If the day is expressed, the day must also be expressed. Examples: '2000'; '2000-04'; '2000-04-27'.
 
 m4: >
-  SCRIVI UN MESSAGGIO PER LE SELF-CITATION!
+  It seems that a self-citation is being represented: the bibliographic resource appears to be citing itself. 
+  Are you sure?
 
 m5: >
-  SCRIVI UN MESSAGGIO PER LE DUPLICATE ROWS IN CITS-CSV!
+  The same citation is being represented in more than one row. Please check all the rows involved in the representation
+   of this citation and unify them or remove the extra ones.
 
 m6: >
-  SCRIVI UN MESSAGGIO PER I CASI IN CUI LO STESSO ID è PRESENTE DUE VOLTE ALL'INTERNO DI UNO STESSO FIELD PER LA STESSA
-  RIGA!
+  The same ID is reported more than once within the same cell. Please remove the extra occurrence(s).
 
 m7: >
-  SCRIVI MESSAGGIO PER I CASI IN CUI MANCA O IL FIELD CITING_ID O IL FIELD CITED_ID, CHE SONO OBBLIGATORI IN CITS-CSV
+  A value for both 'citing_id' and 'cited_id' MUST always be specified.
 
 m8: >
-  SCRIVI MESSAGGIO PER I CASI IN CUI IL TITLE è TUTTO UPPERCASE (WARNING)
+  The whole title of the publication is uppercase. Are you sure? Please double-check the actual title of the 
+  publication.
 
 m9: >
-  SCRIVI MESSAGGIO PER I CASI IN CUI UN SINGOLO ITEM DI UN FIELD R.A. NON è BEN FORMATO (wellformedness_ra_item)
+  The value representing the responsible agent entity is not well-formed. The entity for a responsible agent is
+  represented by the name of the person/organization, followed by a single whitespace and one or 
+  more associated identifiers, always enclosed in square brackets (among the following schemes: viaf, ror, wikidata, 
+  orcid). Common mistakes: more than comma; two or more consecutive whitespace characters; unsupported ID schemes;
+  whitespace character separating the prefix and the ID value.
 
 m10: >
-  SCRIVI MESSAGGIO PER I CASI IN CUI UN ITEM DI UN FIELD R.A. POTREBBE ESSERE UN ID (O UNA SERIE DI ID) FUORI DALLE
-  QUADRE (orphan_ra_id)
+  There has been found a string that seems to be an ID, but it is not enclosed in square brackets. Are you sure?
 
 m11: >
-  SCRIVI MESSAGGIO PER LE DUPLICATE ROWS IN META-CSV.
+  The same bibliographic resource is being represented in more than one row. Please check all the rows involved in 
+  the representation of this publication and unify them or remove the extra ones.
 
 m12: >
-  SCRIVI MESSAGGIO PER FORMATO DI VENUE.
+  The value representing the bibliographic resource entity is not well-formed. The entity for a bibliographic resource
+  is represented by the name of the publication, followed by a single whitespace and one or 
+  more associated identifiers, always enclosed in square brackets (among the following schemes: doi, wikipedia, 
+  wikidata, pmid, pmcid, url, issn and isbn). Common mistakes: two or more consecutive whitespace characters; 
+  unsupported ID schemes; whitespace character separating the prefix and the ID value.
 
 m13: >
-  SCRIVI MESSAGGIO PER FORMATO DI ISSUE E VENUE (stessa validation function)
+  The value for 'issue'/'volume' is not well-formed. Likely cause of error might be the presence of (an) extra 
+  whitespace character(s).
 
 m14: >
-  SCRIVI MESSAGGIO PER FORMATO DI PAGE
+  The value of 'page' is not well-formed. There must always be a starting page, followed by an hyphen, followed by
+  the end page. If the resource is all on the same page, the page numbers before and after the hyphen are the same.
 
 m15: >
-  SCRIVI MESSAGGIO PER ID DI B.R. NEL FIELD >>VENUE<< (!) CHE SI TROVANO FUORI DALLE PARENTESI (warning)
+  There has been found a string that seems to be an ID, but it is not enclosed in square brackets. Are you sure?
 
 m16: >
-  SCRIVI MESSAGGIO PER FORMATO DI TYPE. (tieni sempre presente che la validazione è molto severa, es. se c'è anche solo
-  uno spazio in più, tutto il field - essendoci un solo item - risulta NON valido!)
+  The value of 'type' is not well-formed. The accepted values are exactly the following: 'book', 'book chapter', 'book part', 
+  'book section', 'book series', 'book set', 'book track', 'component', 'dataset', 'data file', 'dissertation', 
+  'edited book', 'journal', 'journal article', 'journal issue', 'journal volume', 'monograph', 'other', 
+  'peer review', 'posted content', 'web content', 'proceedings', 'proceedings article', 'proceedings series',
+  'reference book', 'reference entry', 'report', 'report series', 'series' 'standard', 'standard series'. No spaces
+  are admitted before or after the value.
 
 m17: >
-  SCRIVI MESSAGGIO PER I REQUIRED FIELDS NON SPECIFICATI IN META (comprende sia i casi in cui i valori non sono specificati
-  sia i casi in cui il valore di 'type' non è ('journal article'|'journal volume'|'journal issue') anche se dovrebbe
-  così, dal momento che è specificato un valore in ('volume'|'issue'). 
+  A value of a required field is missing, or the wrong value is specified. Please refer to the table at
+  https://github.com/opencitations/metadata/blob/546e9490d264d481d0ad3451c9533fd2e7b0f101/documentation/csv_documentation.pdf
 
 m18: >
-  SCRIVI MESSAGGIO PER INTERVALLI DI PAGINE IMPOSSIBILI (O NON CONVERTIBILI, vedi funzione check_page_interval)
+  The page interval specified in 'page' seems to be impossible: the start page appears to be greater than the end page.
 
 m19: >
-  SCRIVI MESSAGGIO PER ERRORI NELLA SINTASSI DEGLI IDENTIFICATIVI DELLE RISORSE BIBLIOGRAFICHE
+  The ID in 'id'/'venue' does not conform to the syntax (pattern) of its identifier scheme. Please refer to the relevant 
+  documentation by the specific identifier provider.
 
 m20: >
-  SCRIVI MESSAGGIO PER MANCATA ESISTENZA DI UN IDENTIFICATIVO DI RISORSA BIBLIOGRAFICA (NON RISULTA REGISTRATO NELL'API)
+  The ID in 'id'/'venue' is not registered as a persistent identifier for any bibliographic resource, i.e. it does not exist.
 
 m21: >
-  SCRIVI MESSAGGIO PER ERRORI NELLA SINTASSI DEGLI IDENTIFICATIVI DEI RESPONSIBLE AGENTS
+  The ID in 'author'/'editor'/'publisher' does not conform to the syntax (pattern) of its identifier scheme. Please 
+  refer to the relevant documentation by the specific identifier provider.
 
 m22: >
-  SCRIVI MESSAGGIO PER MANCATA ESISTENZA DI UN IDENTIFICATIVO DI RESPONSIBLE AGENT (NON RISULTA REGISTRATO NELL'API)
+  The ID in 'author'/'editor'/'publisher' is not registered as a persistent identifier for any bibliographic resource, 
+  i.e. it does not exist.
+
 m23: >
   According to the OpenCitations Data Model, the type specified for the bibliographic entity is not compatible with 
-  the ID(s) associated with it
+  the ID(s) associated with it.
