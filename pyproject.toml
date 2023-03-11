@@ -1,11 +1,14 @@
 [tool.poetry]
 name = "oc-table-validator"
 version = "0.1.0"
-description = "A software to validate CSV documents storing citation data and bibliographic metadata (CITS-CSV and META-CSV) according to the OpenCitations Data Model."
+description = "A software to validate CSV documents storing citation data and bibliographic metadata according to the OpenCitations Data Model."
 authors = ["Silvio Peroni <silvio.peroni@unibo.it>","Elia Rizzetto <elia.rizzetto@gmail.com>"]
 license = "ISC"
 readme = "README.md"
-packages = [{include = "oc_table_validator"}]
+packages = [
+    {include = "validator"},
+    {include = "check_output"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
